@@ -1,5 +1,5 @@
 "use client";
-import TournamentManager from "@/components/TournamentManager";
+import TournamentApp from "@/components/TournamentManager";
 
 export default function Home() {
   return (
@@ -7,7 +7,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold mb-8 text-center">
         Table Tennis Tournament
       </h1>
-      <TournamentManager />
+      <TournamentApp />
     </main>
   );
 }
