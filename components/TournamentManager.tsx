@@ -9,7 +9,7 @@ import { ChevronLeft, Shuffle } from "lucide-react";
 // Tournament data structure
 const initialTournamentData = {
   "beginner-mens": {
-    players: Array.from({ length: 16 }, (_, i) => ({
+    players: Array.from({ length: 22 }, (_, i) => ({
       id: `bm-${i + 1}`,
       name: `Beginner ${i + 1}`,
     })),
@@ -227,23 +227,38 @@ const TournamentApp = () => {
       }
     });
 
-    return _.orderBy(standings, ["wins", "matchesWon"], ["desc", "desc"]);
+    return _.orderBy(standings, ["wins"], ["desc"]);
   };
 
   const [tournamentData, setTournamentData] = useState(() => {
     // Initialize tournament data with groups
     const data = { ...initialTournamentData };
+    const minPlayersPerGroup = 3;
+    const maxPlayersPerGroup = 4;
     Object.keys(data).forEach((categoryId) => {
       const groups = [];
-      for (let i = 0; i < data[categoryId].players.length; i += 4) {
+      let groupSlicingIndex = 0;
+      const totalPlayersCurrentGroup = data[categoryId].players.length;
+      let numberOfGroups = Math.ceil(totalPlayersCurrentGroup / maxPlayersPerGroup);
+
+      while ((totalPlayersCurrentGroup / numberOfGroups) < minPlayersPerGroup && numberOfGroups > 1) {
+        numberOfGroups--;
+      }
+      const baseGroupSize = Math.floor(totalPlayersCurrentGroup / numberOfGroups);
+      const extraPlayers = totalPlayersCurrentGroup % numberOfGroups;
+      const groupSizes = Array(numberOfGroups).fill(baseGroupSize).map((size, index) => {
+        return index < extraPlayers ? size + 1 : size;
+      });
+      for (let i = 0; i < data[categoryId].players.length; i += groupSizes[groupSlicingIndex]) {
         const groupPlayers = data[categoryId].players.slice(
           i,
-          Math.min(i + 4, data[categoryId].players.length)
+          Math.min(i + groupSizes[groupSlicingIndex], data[categoryId].players.length)
         );
         groups.push({
           players: groupPlayers,
           matches: generateGroupMatches(groupPlayers),
         });
+        groupSlicingIndex ++
       }
       data[categoryId].groups = groups;
       data[categoryId].playoffs = null;
