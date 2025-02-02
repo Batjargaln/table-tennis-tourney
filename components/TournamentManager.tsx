@@ -187,6 +187,7 @@ const TournamentApp = () => {
         });
       }
     }
+
     return matches;
   };
 
@@ -269,25 +270,37 @@ const TournamentApp = () => {
   // Event handlers
   const handleShuffle = (categoryId) => {
     setTournamentData((prev) => {
-      const shuffledPlayers = _.shuffle([...prev[categoryId].players]);
+      const minPlayersPerGroup = 3;
+      const maxPlayersPerGroup = 4;
+      let groupSlicingIndex = 0;
       const newGroups = [];
-
-      for (let i = 0; i < shuffledPlayers.length; i += 4) {
-        const groupPlayers = shuffledPlayers.slice(
+      const totalPlayers =  _.shuffle([...prev[categoryId].players]);
+      const totalPlayersCurrentGroup = totalPlayers.length;
+      let numberOfGroups = Math.ceil(totalPlayersCurrentGroup / maxPlayersPerGroup);
+      while ((totalPlayersCurrentGroup / numberOfGroups) < minPlayersPerGroup && numberOfGroups > 1) {
+        numberOfGroups--;
+      }
+      const baseGroupSize = Math.floor(totalPlayersCurrentGroup / numberOfGroups);
+      const extraPlayers = totalPlayersCurrentGroup % numberOfGroups;
+      const groupSizes = Array(numberOfGroups).fill(baseGroupSize).map((size, index) => {
+        return index < extraPlayers ? size + 1 : size;
+      });
+      for (let i = 0; i < totalPlayersCurrentGroup; i += groupSizes[groupSlicingIndex]) {
+        const groupPlayers = totalPlayers.slice(
           i,
-          Math.min(i + 4, shuffledPlayers.length)
+          Math.min(i + groupSizes[groupSlicingIndex], totalPlayersCurrentGroup)
         );
         newGroups.push({
           players: groupPlayers,
           matches: generateGroupMatches(groupPlayers),
         });
+        groupSlicingIndex ++
       }
-
       return {
         ...prev,
         [categoryId]: {
           ...prev[categoryId],
-          players: shuffledPlayers,
+          players: totalPlayers,
           groups: newGroups,
           playoffs: null,
         },

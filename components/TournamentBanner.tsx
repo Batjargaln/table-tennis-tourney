@@ -72,6 +72,7 @@ function TournamentBanner() {
               <div className="flex flex-wrap gap-3">
                 {categories.map((category) => (
                   <Badge
+                  variant='primary'
                     key={category}
                     className="bg-blue-100 hover:bg-blue-200 text-blue-700 border-blue-200 text-sm py-2 px-4"
                   >

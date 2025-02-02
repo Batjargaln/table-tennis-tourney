@@ -10,10 +10,13 @@ export default function Home() {
       <nav>
         <ul className="flex space-x-4">
           <li>
-            {/* <Link href="#">Бүртгүүлэх</Link> */}
+            <Link href="/tournament">Оноолт</Link>
           </li>
           <li>
-            {/* <Link href="#">Оноолт</Link> */}
+            <Link href="/about">Бидний тухай</Link>
+          </li>
+          <li>
+            <Link href="/rulebook">Дүрэм</Link>
           </li>
         </ul>
       </nav>
