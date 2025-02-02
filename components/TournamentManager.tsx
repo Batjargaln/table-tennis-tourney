@@ -9,9 +9,10 @@ import { ChevronLeft, Shuffle } from "lucide-react";
 // Tournament data structure
 const initialTournamentData = {
   "beginner-mens": {
-    players: Array.from({ length: 22 }, (_, i) => ({
+    players: Array.from({ length: 17 }, (_, i) => ({
       id: `bm-${i + 1}`,
       name: `Beginner ${i + 1}`,
+
     })),
   },
   "intermediate-mens": {
@@ -63,7 +64,6 @@ const TournamentApp = () => {
   const [view, setView] = useState("groups");
 
   // Helper functions
-
   const createPlayoffBracket = (groups) => {
     // Get top 2 players from each group
     const qualifiedPlayers = groups.map((group, groupIndex) => {
