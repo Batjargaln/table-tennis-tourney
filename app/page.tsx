@@ -1,13 +1,12 @@
 "use client";
 import TournamentBanner from "@/components/TournamentBanner";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import Link from "next/link";
+// import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="container mx-auto py-8 text-center ">
-      <nav>
+    <main className="container mx-auto p-0 md:py-8 text-center ">
+      {/* <nav>
         <ul className="flex space-x-4">
           <li>
             <Link href="/tournament">Оноолт</Link>
@@ -19,7 +18,7 @@ export default function Home() {
             <Link href="/rulebook">Дүрэм</Link>
           </li>
         </ul>
-      </nav>
+      </nav> */}
       <div className="max-w-4xl mx-auto">
         <Image
           className="fixed blur-lg"
@@ -28,7 +27,7 @@ export default function Home() {
           fill
           style={{ zIndex: -1 }}
         />
-          <TournamentBanner />
+        <TournamentBanner />
       </div>
     </main>
   );

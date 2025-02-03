@@ -12,7 +12,6 @@ const initialTournamentData = {
     players: Array.from({ length: 17 }, (_, i) => ({
       id: `bm-${i + 1}`,
       name: `Beginner ${i + 1}`,
-
     })),
   },
   "intermediate-mens": {
@@ -66,113 +65,139 @@ const TournamentApp = () => {
   // Helper functions
   const createPlayoffBracket = (groups) => {
     // Get top 2 players from each group
-    const qualifiedPlayers = groups.map((group, groupIndex) => {
-      // Calculate standings for each group
-      const standings = group.players.map(player => ({
-        ...player,
-        matches: 0,
-        wins: 0,
-        losses: 0,
-        matchesWon: 0,
-        matchesLost: 0
-      }));
+    const qualifiedPlayers = groups
+      .map((group, groupIndex) => {
+        // Calculate standings for each group
+        const standings = group.players.map((player) => ({
+          ...player,
+          matches: 0,
+          wins: 0,
+          losses: 0,
+          matchesWon: 0,
+          matchesLost: 0,
+        }));
 
-      group.matches.forEach(match => {
-        if (match.score) {
-          const player1Standing = standings.find(s => s.id === match.player1.id);
-          const player2Standing = standings.find(s => s.id === match.player2.id);
+        group.matches.forEach((match) => {
+          if (match.score) {
+            const player1Standing = standings.find(
+              (s) => s.id === match.player1.id
+            );
+            const player2Standing = standings.find(
+              (s) => s.id === match.player2.id
+            );
 
-          player1Standing.matches += 1;
-          player2Standing.matches += 1;
+            player1Standing.matches += 1;
+            player2Standing.matches += 1;
 
-          if (match.score.player1Score > match.score.player2Score) {
-            player1Standing.wins += 1;
-            player2Standing.losses += 1;
-          } else {
-            player2Standing.wins += 1;
-            player1Standing.losses += 1;
+            if (match.score.player1Score > match.score.player2Score) {
+              player1Standing.wins += 1;
+              player2Standing.losses += 1;
+            } else {
+              player2Standing.wins += 1;
+              player1Standing.losses += 1;
+            }
+
+            player1Standing.matchesWon += match.score.player1Score;
+            player1Standing.matchesLost += match.score.player2Score;
+            player2Standing.matchesWon += match.score.player2Score;
+            player2Standing.matchesLost += match.score.player1Score;
           }
+        });
 
-          player1Standing.matchesWon += match.score.player1Score;
-          player1Standing.matchesLost += match.score.player2Score;
-          player2Standing.matchesWon += match.score.player2Score;
-          player2Standing.matchesLost += match.score.player1Score;
-        }
-      });
-
-      const sortedStandings = _.orderBy(standings, ['wins', 'matchesWon'], ['desc', 'desc']);
-      return sortedStandings.slice(0, 2).map((player, rank) => ({
-        ...player,
-        groupId: String.fromCharCode(65 + groupIndex),
-        rank: rank + 1
-      }));
-    }).flat();
+        const sortedStandings = _.orderBy(
+          standings,
+          ["wins", "matchesWon"],
+          ["desc", "desc"]
+        );
+        return sortedStandings.slice(0, 2).map((player, rank) => ({
+          ...player,
+          groupId: String.fromCharCode(65 + groupIndex),
+          rank: rank + 1,
+        }));
+      })
+      .flat();
 
     // Create quarter-final matches
     const quarterFinals = [
       {
-        id: 'QF1',
-        player1: qualifiedPlayers.find(p => p.groupId === 'A' && p.rank === 1),
-        player2: qualifiedPlayers.find(p => p.groupId === 'D' && p.rank === 2),
+        id: "QF1",
+        player1: qualifiedPlayers.find(
+          (p) => p.groupId === "A" && p.rank === 1
+        ),
+        player2: qualifiedPlayers.find(
+          (p) => p.groupId === "D" && p.rank === 2
+        ),
         score: null,
-        round: 'quarter'
+        round: "quarter",
       },
       {
-        id: 'QF2',
-        player1: qualifiedPlayers.find(p => p.groupId === 'B' && p.rank === 1),
-        player2: qualifiedPlayers.find(p => p.groupId === 'C' && p.rank === 2),
+        id: "QF2",
+        player1: qualifiedPlayers.find(
+          (p) => p.groupId === "B" && p.rank === 1
+        ),
+        player2: qualifiedPlayers.find(
+          (p) => p.groupId === "C" && p.rank === 2
+        ),
         score: null,
-        round: 'quarter'
+        round: "quarter",
       },
       {
-        id: 'QF3',
-        player1: qualifiedPlayers.find(p => p.groupId === 'C' && p.rank === 1),
-        player2: qualifiedPlayers.find(p => p.groupId === 'B' && p.rank === 2),
+        id: "QF3",
+        player1: qualifiedPlayers.find(
+          (p) => p.groupId === "C" && p.rank === 1
+        ),
+        player2: qualifiedPlayers.find(
+          (p) => p.groupId === "B" && p.rank === 2
+        ),
         score: null,
-        round: 'quarter'
+        round: "quarter",
       },
       {
-        id: 'QF4',
-        player1: qualifiedPlayers.find(p => p.groupId === 'D' && p.rank === 1),
-        player2: qualifiedPlayers.find(p => p.groupId === 'A' && p.rank === 2),
+        id: "QF4",
+        player1: qualifiedPlayers.find(
+          (p) => p.groupId === "D" && p.rank === 1
+        ),
+        player2: qualifiedPlayers.find(
+          (p) => p.groupId === "A" && p.rank === 2
+        ),
         score: null,
-        round: 'quarter'
-      }
+        round: "quarter",
+      },
     ];
 
     // Create semi-final placeholders
     const semiFinals = [
       {
-        id: 'SF1',
+        id: "SF1",
         player1: null,
         player2: null,
         score: null,
-        round: 'semi',
-        previousMatches: ['QF1', 'QF2']
+        round: "semi",
+        previousMatches: ["QF1", "QF2"],
       },
       {
-        id: 'SF2',
+        id: "SF2",
         player1: null,
         player2: null,
         score: null,
-        round: 'semi',
-        previousMatches: ['QF3', 'QF4']
-      }
+        round: "semi",
+        previousMatches: ["QF3", "QF4"],
+      },
     ];
 
     // Create final placeholder
     const final = {
-      id: 'F1',
+      id: "F1",
       player1: null,
       player2: null,
       score: null,
-      round: 'final',
-      previousMatches: ['SF1', 'SF2']
+      round: "final",
+      previousMatches: ["SF1", "SF2"],
     };
 
     return {
       matches: [...quarterFinals, ...semiFinals, final],
-      qualifiedPlayers
+      qualifiedPlayers,
     };
   };
   const generateGroupMatches = (players) => {
@@ -240,26 +265,42 @@ const TournamentApp = () => {
       const groups = [];
       let groupSlicingIndex = 0;
       const totalPlayersCurrentGroup = data[categoryId].players.length;
-      let numberOfGroups = Math.ceil(totalPlayersCurrentGroup / maxPlayersPerGroup);
+      let numberOfGroups = Math.ceil(
+        totalPlayersCurrentGroup / maxPlayersPerGroup
+      );
 
-      while ((totalPlayersCurrentGroup / numberOfGroups) < minPlayersPerGroup && numberOfGroups > 1) {
+      while (
+        totalPlayersCurrentGroup / numberOfGroups < minPlayersPerGroup &&
+        numberOfGroups > 1
+      ) {
         numberOfGroups--;
       }
-      const baseGroupSize = Math.floor(totalPlayersCurrentGroup / numberOfGroups);
+      const baseGroupSize = Math.floor(
+        totalPlayersCurrentGroup / numberOfGroups
+      );
       const extraPlayers = totalPlayersCurrentGroup % numberOfGroups;
-      const groupSizes = Array(numberOfGroups).fill(baseGroupSize).map((size, index) => {
-        return index < extraPlayers ? size + 1 : size;
-      });
-      for (let i = 0; i < data[categoryId].players.length; i += groupSizes[groupSlicingIndex]) {
+      const groupSizes = Array(numberOfGroups)
+        .fill(baseGroupSize)
+        .map((size, index) => {
+          return index < extraPlayers ? size + 1 : size;
+        });
+      for (
+        let i = 0;
+        i < data[categoryId].players.length;
+        i += groupSizes[groupSlicingIndex]
+      ) {
         const groupPlayers = data[categoryId].players.slice(
           i,
-          Math.min(i + groupSizes[groupSlicingIndex], data[categoryId].players.length)
+          Math.min(
+            i + groupSizes[groupSlicingIndex],
+            data[categoryId].players.length
+          )
         );
         groups.push({
           players: groupPlayers,
           matches: generateGroupMatches(groupPlayers),
         });
-        groupSlicingIndex ++
+        groupSlicingIndex++;
       }
       data[categoryId].groups = groups;
       data[categoryId].playoffs = null;
@@ -274,18 +315,31 @@ const TournamentApp = () => {
       const maxPlayersPerGroup = 4;
       let groupSlicingIndex = 0;
       const newGroups = [];
-      const totalPlayers =  _.shuffle([...prev[categoryId].players]);
+      const totalPlayers = _.shuffle([...prev[categoryId].players]);
       const totalPlayersCurrentGroup = totalPlayers.length;
-      let numberOfGroups = Math.ceil(totalPlayersCurrentGroup / maxPlayersPerGroup);
-      while ((totalPlayersCurrentGroup / numberOfGroups) < minPlayersPerGroup && numberOfGroups > 1) {
+      let numberOfGroups = Math.ceil(
+        totalPlayersCurrentGroup / maxPlayersPerGroup
+      );
+      while (
+        totalPlayersCurrentGroup / numberOfGroups < minPlayersPerGroup &&
+        numberOfGroups > 1
+      ) {
         numberOfGroups--;
       }
-      const baseGroupSize = Math.floor(totalPlayersCurrentGroup / numberOfGroups);
+      const baseGroupSize = Math.floor(
+        totalPlayersCurrentGroup / numberOfGroups
+      );
       const extraPlayers = totalPlayersCurrentGroup % numberOfGroups;
-      const groupSizes = Array(numberOfGroups).fill(baseGroupSize).map((size, index) => {
-        return index < extraPlayers ? size + 1 : size;
-      });
-      for (let i = 0; i < totalPlayersCurrentGroup; i += groupSizes[groupSlicingIndex]) {
+      const groupSizes = Array(numberOfGroups)
+        .fill(baseGroupSize)
+        .map((size, index) => {
+          return index < extraPlayers ? size + 1 : size;
+        });
+      for (
+        let i = 0;
+        i < totalPlayersCurrentGroup;
+        i += groupSizes[groupSlicingIndex]
+      ) {
         const groupPlayers = totalPlayers.slice(
           i,
           Math.min(i + groupSizes[groupSlicingIndex], totalPlayersCurrentGroup)
@@ -294,7 +348,7 @@ const TournamentApp = () => {
           players: groupPlayers,
           matches: generateGroupMatches(groupPlayers),
         });
-        groupSlicingIndex ++
+        groupSlicingIndex++;
       }
       return {
         ...prev,
