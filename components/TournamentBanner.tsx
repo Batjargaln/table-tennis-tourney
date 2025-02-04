@@ -3,8 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { Calendar, MapPin, Trophy } from "lucide-react";
 import { Button } from "./ui/button";
+import { useRouter } from 'next/navigation'
 
 function TournamentBanner() {
+  const router = useRouter();
   const categories = [
     "Эрэгтэй ганцаарчилсан /анхан шат/",
     "Эрэгтэй ганцаарчилсан /сонирхогч шат/",
@@ -15,7 +17,7 @@ function TournamentBanner() {
   ];
 
   const handleRegister = () => {
-    console.log("Registry button clicked");
+    router.push('/register')
   };
   return (
     <>

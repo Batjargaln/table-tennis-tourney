@@ -9,6 +9,9 @@ export default function Home() {
       {/* <nav>
         <ul className="flex space-x-4">
           <li>
+            <Link href="/register">Бүртгүүлэх</Link>
+          </li>
+          <li>
             <Link href="/tournament">Оноолт</Link>
           </li>
           <li>
