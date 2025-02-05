@@ -12,6 +12,7 @@ function TournamentBanner() {
     "Эрэгтэй ганцаарчилсан /сонирхогч шат/",
     "Эрэгтэй ганцаарчилсан /ахисан/",
     "Эмэгтэй ганцаарчилсан /анхан шат/",
+    "Эмэгтэй ганцаарчилсан /ахисан/",
     "Холимог хос",
     "Багийн төрөл",
   ];
@@ -129,7 +130,7 @@ function TournamentBanner() {
                   Тоглолтууд эхэлнэ
                 </h3>
                 <p className="text-blue-800/70">
-                  10:00 AM - Ганцаарчилсан төрөлийн тоглолтууд эхэлнэ
+                  10:00 AM - Ганцаарчилсан төрлийн тоглолтууд эхэлнэ
                 </p>
               </div>
               <div className="border-b border-blue-100 pb-4">
@@ -140,26 +141,16 @@ function TournamentBanner() {
               </div>
               <div className="border-b border-blue-100 pb-4">
                 <h3 className="text-blue-900 font-semibold">
-                  Хасагдах шатны тоглолтууд
+                  Ганцаарчилсан хасагдах шатны тоглолтууд
                 </h3>
                 <p className="text-blue-800/70">
-                  3:00 PM - Хасагдах шат, хосын, багийн тоглолтууд эхэлнэ
+                  5:00 PM - Хасагдах шатны тоглолтууд эхэлнэ
                 </p>
               </div>
               <div>
-                <h3 className="text-blue-900 font-semibold">Хагас финал</h3>
+                <h3 className="text-blue-900 font-semibold">Тэмцээний эхний өдөр өндөрлөнө</h3>
                 <p className="text-blue-800/70">
-                  5:00 PM - Ганцаарчилсан хагас финалаас бусад бүх тоглолтууд
-                  дуусна
-                </p>
-              </div>
-              <div>
-                <h3 className="text-blue-900 font-semibold">
-                  Эхний өдөр өндөрлөнө
-                </h3>
-                <p className="text-blue-800/70">
-                  8:00 PM - Баг болон хосын хагас финалаас бусад бүх тоглолтууд
-                  дуусна
+                  8:00 PM - Ганцаарчилсан төрлүүдийн шилдэг 8 аас бусад тоглолт дуусна
                 </p>
               </div>
             </div>
@@ -172,24 +163,31 @@ function TournamentBanner() {
                   Ганцаарчилсан тоглолтууд
                 </h3>
                 <p className="text-blue-800/70">
-                  9:30 AM - Ганцаарчилсан хагас финалын тоглолтууд эхэлнэ
+                  9:30 AM - Ганцаарчилсан төрлүүдийн аваргууд тодорно
                 </p>
               </div>
               <div className="border-b border-blue-100 pb-4">
                 <h3 className="text-blue-900 font-semibold">
-                  Баг болон хосын тоглолтууд
+                  Багийн тоглолт эхэлнэ
                 </h3>
                 <p className="text-blue-800/70">
-                  11:00 AM - Баг болон хосын хагас финалын тоглолтууд эхэлнэ
+                  12:00 - PM Багийн тоглолтууд
                 </p>
               </div>
               <div className="border-b border-blue-100 pb-4">
                 <h3 className="text-blue-900 font-semibold">
-                  Шагнал гардуулалт
+                  Холимог хос
                 </h3>
                 <p className="text-blue-800/70">
-                  1:00 PM - Байр эзэлсэн тоглогчидод шагнал гардуулалт болон
-                  тэмцээний хаалт
+                  3:00 PM - Холимог хосын тоглолтууд
+                </p>
+              </div>
+              <div className="border-b border-blue-100 pb-4">
+                <h3 className="text-blue-900 font-semibold">
+                  Тэмцээний хаалт
+                </h3>
+                <p className="text-blue-800/70">
+                  5:00 PM Байр эзэлсэн тоглогчид болон баг, хосуудад шагнал гардуулна
                 </p>
               </div>
             </div>
