@@ -200,7 +200,7 @@ function TournamentBanner() {
           <Link href="/register">
             <Button
               variant="secondary"
-              className="bg-white text-blue-900 px-8 py-6 rounded-full font-bold hover:bg-blue-50 transition-all transform hover:scale-105"
+              className="bg-white text-blue-900 px-8 py-6 rounded-full font-bold hover:bg-blue-50 transition-all transform hover:scale-100"
             >
               Бүртгүүлэх
             </Button>
