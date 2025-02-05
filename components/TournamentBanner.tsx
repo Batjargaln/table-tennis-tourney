@@ -3,10 +3,9 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import { Calendar, MapPin, Trophy } from "lucide-react";
 import { Button } from "./ui/button";
-import { useRouter } from 'next/navigation'
+import Link from "next/link";
 
 function TournamentBanner() {
-  const router = useRouter();
   const categories = [
     "Эрэгтэй ганцаарчилсан /анхан шат/",
     "Эрэгтэй ганцаарчилсан /сонирхогч шат/",
@@ -17,9 +16,6 @@ function TournamentBanner() {
     "Багийн төрөл",
   ];
 
-  const handleRegister = () => {
-    router.push('/register')
-  };
   return (
     <>
       {/* Main Container */}
@@ -38,13 +34,14 @@ function TournamentBanner() {
               ШАЛГАРУУЛАХ ТЭМЦЭЭН
             </h1>
 
-            <Button
-              variant="secondary"
-              className="bg-white text-blue-900 px-8 py-6 rounded-full font-bold hover:bg-blue-50 transition-all transform hover:scale-105"
-              onClick={handleRegister}
-            >
-              Бүртгүүлэх
-            </Button>
+            <Link href="/register">
+              <Button
+                variant="secondary"
+                className="bg-white text-blue-900 px-8 py-6 rounded-full font-bold hover:bg-blue-50 transition-all transform hover:scale-105"
+              >
+                Бүртгүүлэх
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -101,7 +98,7 @@ function TournamentBanner() {
                   <Badge
                     variant="default"
                     key={category}
-                    className="bg-blue-100 text-blue-700 border-blue-200 text-sm py-2 px-4"
+                    className="bg-blue-100 text-blue-700 border-blue-200 text-sm py-2 px-4 hover:bg-blue-100"
                   >
                     {category}
                   </Badge>
@@ -148,9 +145,12 @@ function TournamentBanner() {
                 </p>
               </div>
               <div>
-                <h3 className="text-blue-900 font-semibold">Тэмцээний эхний өдөр өндөрлөнө</h3>
+                <h3 className="text-blue-900 font-semibold">
+                  Тэмцээний эхний өдөр өндөрлөнө
+                </h3>
                 <p className="text-blue-800/70">
-                  8:00 PM - Ганцаарчилсан төрлүүдийн шилдэг 8 аас бусад тоглолт дуусна
+                  8:00 PM - Ганцаарчилсан төрлүүдийн шилдэг 8 аас бусад тоглолт
+                  дуусна
                 </p>
               </div>
             </div>
@@ -170,24 +170,19 @@ function TournamentBanner() {
                 <h3 className="text-blue-900 font-semibold">
                   Багийн тоглолт эхэлнэ
                 </h3>
-                <p className="text-blue-800/70">
-                  12:00 - PM Багийн тоглолтууд
-                </p>
+                <p className="text-blue-800/70">12:00 - PM Багийн тоглолтууд</p>
               </div>
               <div className="border-b border-blue-100 pb-4">
-                <h3 className="text-blue-900 font-semibold">
-                  Холимог хос
-                </h3>
+                <h3 className="text-blue-900 font-semibold">Холимог хос</h3>
                 <p className="text-blue-800/70">
                   3:00 PM - Холимог хосын тоглолтууд
                 </p>
               </div>
               <div className="border-b border-blue-100 pb-4">
-                <h3 className="text-blue-900 font-semibold">
-                  Тэмцээний хаалт
-                </h3>
+                <h3 className="text-blue-900 font-semibold">Тэмцээний хаалт</h3>
                 <p className="text-blue-800/70">
-                  5:00 PM Байр эзэлсэн тоглогчид болон баг, хосуудад шагнал гардуулна
+                  5:00 PM Байр эзэлсэн тоглогчид болон баг, хосуудад шагнал
+                  гардуулна
                 </p>
               </div>
             </div>
@@ -202,13 +197,14 @@ function TournamentBanner() {
               Халуун дулаан, нөхөрсөг тоглолтууд таныг хүлээж байна!
             </p>
           </div>
-          <Button
-            variant="secondary"
-            onClick={handleRegister}
-            className="bg-white text-blue-900 px-8 py-6 rounded-full font-bold hover:bg-blue-50 transition-all transform hover:scale-105"
-          >
-            Бүртгүүлэх
-          </Button>
+          <Link href="/register">
+            <Button
+              variant="secondary"
+              className="bg-white text-blue-900 px-8 py-6 rounded-full font-bold hover:bg-blue-50 transition-all transform hover:scale-105"
+            >
+              Бүртгүүлэх
+            </Button>
+          </Link>
         </div>
       </div>
     </>
