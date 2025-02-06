@@ -1,8 +1,9 @@
+import Rulebook from '@/components/Rulebook'
 import React from 'react'
 
 function page() {
   return (
-    <div>Rulebook</div>
+    <Rulebook />
   )
 }
 

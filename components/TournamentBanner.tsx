@@ -42,6 +42,14 @@ function TournamentBanner() {
                 Бүртгүүлэх
               </Button>
             </Link>
+            <Link href="/rulebook">
+              <Button
+                variant="secondary"
+                className="bg-white text-blue-900 ml-8 px-8 py-6 rounded-full font-bold hover:bg-blue-50 transition-all transform hover:scale-105"
+              >
+                Дүрэм
+              </Button>
+            </Link>
           </div>
         </div>
 

@@ -5,8 +5,8 @@ import { inter } from "@/components/fonts";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Table Tennis Tournament",
-  description: "Table Tennis Tournament",
+  title: "Washington DC 2025 Table Tennis Tournament",
+  description: "DC Mongol Table Tennis",
 };
 
 export default function RootLayout({
