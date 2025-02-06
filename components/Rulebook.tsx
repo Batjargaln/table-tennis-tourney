@@ -29,7 +29,7 @@ const Rulebook = () => {
   return (
     <Card className="max-w-6xl mx-auto bg-blue-50">
       <CardHeader className="bg-blue-100">
-        <CardTitle className="text-2xl font-bold text-blue-900">Тэмцээний Дүрэм</CardTitle>
+        <CardTitle className="text-2xl font-bold text-blue-900">Тэмцээний дүрэм</CardTitle>
       </CardHeader>
       <CardContent className="p-6 space-y-6">
         {Object.entries(rules).map(([category, categoryRules]) => (

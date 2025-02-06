@@ -5,7 +5,7 @@ import { inter } from "@/components/fonts";
 import { ThemeProvider } from "@/components/theme-provider";
 
 export const metadata: Metadata = {
-  title: "Washington DC 2025 Table Tennis Tournament",
+  title: "Washington, D.C. 2025",
   description: "DC Mongol Table Tennis",
 };
 
