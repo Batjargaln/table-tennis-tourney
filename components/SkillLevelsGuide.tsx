@@ -62,7 +62,7 @@ const SkillLevelsGuide = () => {
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2">•</span>
-                    Спортын 3р зэрэгтэй байж болно
+                    Спортын 2 болон 3-р зэрэгтэй байж болно
                 </li>
               </ul>
             </div>
@@ -79,7 +79,7 @@ const SkillLevelsGuide = () => {
               <ul className="space-y-3 text-blue-800/70">
                 <li className="flex items-start">
                   <span className="mr-2">•</span>
-                    Спортын зэрэгтэй (2 болон түүнээс дээш)
+                    Спортын зэрэгтэй (1 болон түүнээс дээш)
                 </li>
                 <li className="flex items-start">
                   <span className="mr-2">•</span>
