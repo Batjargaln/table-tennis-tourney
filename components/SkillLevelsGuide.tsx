@@ -3,7 +3,7 @@ import { Trophy, Star, Users } from 'lucide-react';
 const SkillLevelsGuide = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-6">
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto flex flex-col items-center">
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-blue-900 mb-4">Тоглох түвшингээ сонгох заавар</h1>
@@ -103,6 +103,15 @@ const SkillLevelsGuide = () => {
             Оролцож буй төрлийнхөө дээд түвшинд тоглох боломж хүн бүрд нээлттэй. Нэмэлт хураамж - $20
           </p>
         </div>
+
+        <a
+          className="bg-white text-blue-900 mt-8 px-8 py-6 rounded-full font-bold hover:bg-blue-50 transition-all transform hover:scale-100 content-center"
+          href={"https://form.jotform.com/250357439190055"}
+          target="_blank"
+
+        >
+          Бүртгүүлэх
+      </a>
       </div>
     </div>
   );
