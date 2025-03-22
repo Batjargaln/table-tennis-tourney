@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import CategoryCard from "./CategoryCard";
-import GroupCard from "./GroupCard";
-import PlayoffBracket from "./PlayOffBracket";
-import _ from "lodash";
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, Shuffle } from "lucide-react";
+"use client"
+
+import _ from "lodash"
+import React, { useState } from "react"
+
+
+import PlayoffBracket from "./PlayOffBracket"
 
 // Tournament data structure
 const initialTournamentData = {
@@ -26,41 +26,23 @@ const initialTournamentData = {
       name: `Advanced ${i + 1}`,
     })),
   },
-  womens: {
+  "intermediate-womens": {
     players: Array.from({ length: 16 }, (_, i) => ({
       id: `w-${i + 1}`,
-      name: `Women ${i + 1}`,
+      name: `Women Intermediate ${i + 1}`,
     })),
   },
-};
-
-const categories = [
-  {
-    id: "beginner-mens",
-    title: "Men's Singles - Beginner",
-    description: "For players new to competitive table tennis",
+  "advanced-womens": {
+    players: Array.from({ length: 16 }, (_, i) => ({
+      id: `w-${i + 1}`,
+      name: `Women advanced ${i + 1}`,
+    })),
   },
-  {
-    id: "intermediate-mens",
-    title: "Men's Singles - Intermediate",
-    description: "For players with some competitive experience",
-  },
-  {
-    id: "advanced-mens",
-    title: "Men's Singles - Advanced",
-    description: "For experienced competitive players",
-  },
-  {
-    id: "womens",
-    title: "Women's Singles",
-    description: "Open category for all skill levels",
-  },
-];
+}
 
 const TournamentApp = () => {
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [editingMatch, setEditingMatch] = useState(null);
-  const [view, setView] = useState("groups");
+  const [editingMatch, setEditingMatch] = useState(null)
+  const [view, setView] = useState("groups")
 
   // Helper functions
   const createPlayoffBracket = (groups) => {
@@ -75,47 +57,48 @@ const TournamentApp = () => {
           losses: 0,
           matchesWon: 0,
           matchesLost: 0,
-        }));
+        }))
 
         group.matches.forEach((match) => {
           if (match.score) {
             const player1Standing = standings.find(
               (s) => s.id === match.player1.id
-            );
+            )
             const player2Standing = standings.find(
               (s) => s.id === match.player2.id
-            );
+            )
 
-            player1Standing.matches += 1;
-            player2Standing.matches += 1;
+            player1Standing.matches += 1
+            player2Standing.matches += 1
 
             if (match.score.player1Score > match.score.player2Score) {
-              player1Standing.wins += 1;
-              player2Standing.losses += 1;
+              player1Standing.wins += 1
+              player2Standing.losses += 1
             } else {
-              player2Standing.wins += 1;
-              player1Standing.losses += 1;
+              player2Standing.wins += 1
+              player1Standing.losses += 1
             }
 
-            player1Standing.matchesWon += match.score.player1Score;
-            player1Standing.matchesLost += match.score.player2Score;
-            player2Standing.matchesWon += match.score.player2Score;
-            player2Standing.matchesLost += match.score.player1Score;
+            player1Standing.matchesWon += match.score.player1Score
+            player1Standing.matchesLost += match.score.player2Score
+            player2Standing.matchesWon += match.score.player2Score
+            player2Standing.matchesLost += match.score.player1Score
           }
-        });
+        })
 
         const sortedStandings = _.orderBy(
           standings,
           ["wins", "matchesWon"],
           ["desc", "desc"]
-        );
+        )
+
         return sortedStandings.slice(0, 2).map((player, rank) => ({
           ...player,
           groupId: String.fromCharCode(65 + groupIndex),
           rank: rank + 1,
-        }));
+        }))
       })
-      .flat();
+      .flat()
 
     // Create quarter-final matches
     const quarterFinals = [
@@ -163,7 +146,7 @@ const TournamentApp = () => {
         score: null,
         round: "quarter",
       },
-    ];
+    ]
 
     // Create semi-final placeholders
     const semiFinals = [
@@ -183,7 +166,7 @@ const TournamentApp = () => {
         round: "semi",
         previousMatches: ["QF3", "QF4"],
       },
-    ];
+    ]
 
     // Create final placeholder
     const final = {
@@ -193,15 +176,15 @@ const TournamentApp = () => {
       score: null,
       round: "final",
       previousMatches: ["SF1", "SF2"],
-    };
+    }
 
     return {
       matches: [...quarterFinals, ...semiFinals, final],
       qualifiedPlayers,
-    };
-  };
+    }
+  }
   const generateGroupMatches = (players) => {
-    const matches = [];
+    const matches = []
     for (let i = 0; i < players.length; i++) {
       for (let j = i + 1; j < players.length; j++) {
         matches.push({
@@ -209,12 +192,12 @@ const TournamentApp = () => {
           player1: players[i],
           player2: players[j],
           score: null,
-        });
+        })
       }
     }
 
-    return matches;
-  };
+    return matches
+  }
 
   const calculateStandings = (group) => {
     const standings = group.players.map((player) => ({
@@ -224,66 +207,62 @@ const TournamentApp = () => {
       losses: 0,
       matchesWon: 0,
       matchesLost: 0,
-    }));
+    }))
 
     group.matches.forEach((match) => {
       if (match.score) {
-        const player1Standing = standings.find(
-          (s) => s.id === match.player1.id
-        );
-        const player2Standing = standings.find(
-          (s) => s.id === match.player2.id
-        );
+        const player1Standing = standings.find((s) => s.id === match.player1.id)
+        const player2Standing = standings.find((s) => s.id === match.player2.id)
 
-        player1Standing.matches += 1;
-        player2Standing.matches += 1;
+        player1Standing.matches += 1
+        player2Standing.matches += 1
 
         if (match.score.player1Score > match.score.player2Score) {
-          player1Standing.wins += 1;
-          player2Standing.losses += 1;
+          player1Standing.wins += 1
+          player2Standing.losses += 1
         } else {
-          player2Standing.wins += 1;
-          player1Standing.losses += 1;
+          player2Standing.wins += 1
+          player1Standing.losses += 1
         }
 
-        player1Standing.matchesWon += match.score.player1Score;
-        player1Standing.matchesLost += match.score.player2Score;
-        player2Standing.matchesWon += match.score.player2Score;
-        player2Standing.matchesLost += match.score.player1Score;
+        player1Standing.matchesWon += match.score.player1Score
+        player1Standing.matchesLost += match.score.player2Score
+        player2Standing.matchesWon += match.score.player2Score
+        player2Standing.matchesLost += match.score.player1Score
       }
-    });
+    })
 
-    return _.orderBy(standings, ["wins"], ["desc"]);
-  };
+    return _.orderBy(standings, ["wins"], ["desc"])
+  }
 
   const [tournamentData, setTournamentData] = useState(() => {
     // Initialize tournament data with groups
-    const data = { ...initialTournamentData };
-    const minPlayersPerGroup = 3;
-    const maxPlayersPerGroup = 4;
+    const data = { ...initialTournamentData }
+    const minPlayersPerGroup = 3
+    const maxPlayersPerGroup = 4
     Object.keys(data).forEach((categoryId) => {
-      const groups = [];
-      let groupSlicingIndex = 0;
-      const totalPlayersCurrentGroup = data[categoryId].players.length;
+      const groups = []
+      let groupSlicingIndex = 0
+      const totalPlayersCurrentGroup = data[categoryId].players.length
       let numberOfGroups = Math.ceil(
         totalPlayersCurrentGroup / maxPlayersPerGroup
-      );
+      )
 
       while (
         totalPlayersCurrentGroup / numberOfGroups < minPlayersPerGroup &&
         numberOfGroups > 1
       ) {
-        numberOfGroups--;
+        numberOfGroups--
       }
       const baseGroupSize = Math.floor(
         totalPlayersCurrentGroup / numberOfGroups
-      );
-      const extraPlayers = totalPlayersCurrentGroup % numberOfGroups;
+      )
+      const extraPlayers = totalPlayersCurrentGroup % numberOfGroups
       const groupSizes = Array(numberOfGroups)
         .fill(baseGroupSize)
         .map((size, index) => {
-          return index < extraPlayers ? size + 1 : size;
-        });
+          return index < extraPlayers ? size + 1 : size
+        })
       for (
         let i = 0;
         i < data[categoryId].players.length;
@@ -295,46 +274,46 @@ const TournamentApp = () => {
             i + groupSizes[groupSlicingIndex],
             data[categoryId].players.length
           )
-        );
+        )
         groups.push({
           players: groupPlayers,
           matches: generateGroupMatches(groupPlayers),
-        });
-        groupSlicingIndex++;
+        })
+        groupSlicingIndex++
       }
-      data[categoryId].groups = groups;
-      data[categoryId].playoffs = null;
-    });
-    return data;
-  });
+      data[categoryId].groups = groups
+      data[categoryId].playoffs = null
+    })
+    return data
+  })
 
   // Event handlers
   const handleShuffle = (categoryId) => {
     setTournamentData((prev) => {
-      const minPlayersPerGroup = 3;
-      const maxPlayersPerGroup = 4;
-      let groupSlicingIndex = 0;
-      const newGroups = [];
-      const totalPlayers = _.shuffle([...prev[categoryId].players]);
-      const totalPlayersCurrentGroup = totalPlayers.length;
+      const minPlayersPerGroup = 3
+      const maxPlayersPerGroup = 4
+      let groupSlicingIndex = 0
+      const newGroups = []
+      const totalPlayers = _.shuffle([...prev[categoryId].players])
+      const totalPlayersCurrentGroup = totalPlayers.length
       let numberOfGroups = Math.ceil(
         totalPlayersCurrentGroup / maxPlayersPerGroup
-      );
+      )
       while (
         totalPlayersCurrentGroup / numberOfGroups < minPlayersPerGroup &&
         numberOfGroups > 1
       ) {
-        numberOfGroups--;
+        numberOfGroups--
       }
       const baseGroupSize = Math.floor(
         totalPlayersCurrentGroup / numberOfGroups
-      );
-      const extraPlayers = totalPlayersCurrentGroup % numberOfGroups;
+      )
+      const extraPlayers = totalPlayersCurrentGroup % numberOfGroups
       const groupSizes = Array(numberOfGroups)
         .fill(baseGroupSize)
         .map((size, index) => {
-          return index < extraPlayers ? size + 1 : size;
-        });
+          return index < extraPlayers ? size + 1 : size
+        })
       for (
         let i = 0;
         i < totalPlayersCurrentGroup;
@@ -343,12 +322,12 @@ const TournamentApp = () => {
         const groupPlayers = totalPlayers.slice(
           i,
           Math.min(i + groupSizes[groupSlicingIndex], totalPlayersCurrentGroup)
-        );
+        )
         newGroups.push({
           players: groupPlayers,
           matches: generateGroupMatches(groupPlayers),
-        });
-        groupSlicingIndex++;
+        })
+        groupSlicingIndex++
       }
       return {
         ...prev,
@@ -358,22 +337,22 @@ const TournamentApp = () => {
           groups: newGroups,
           playoffs: null,
         },
-      };
-    });
-    setEditingMatch(null);
-  };
+      }
+    })
+    setEditingMatch(null)
+  }
 
   const handleSetScore = (groupIndex, matchId, player1Score, player2Score) => {
     setTournamentData((prev) => {
-      const newGroups = [...prev[selectedCategory].groups];
-      const groupMatches = newGroups[groupIndex].matches;
-      const matchIndex = groupMatches.findIndex((m) => m.id === matchId);
+      const newGroups = [...prev[selectedCategory].groups]
+      const groupMatches = newGroups[groupIndex].matches
+      const matchIndex = groupMatches.findIndex((m) => m.id === matchId)
 
       if (matchIndex !== -1) {
         groupMatches[matchIndex] = {
           ...groupMatches[matchIndex],
           score: { player1Score, player2Score },
-        };
+        }
       }
 
       return {
@@ -382,34 +361,34 @@ const TournamentApp = () => {
           ...prev[selectedCategory],
           groups: newGroups,
         },
-      };
-    });
-    setEditingMatch(null);
-  };
+      }
+    })
+    setEditingMatch(null)
+  }
 
   const handlePlayoffScore = (matchId, player1Score, player2Score) => {
     setTournamentData((prev) => {
-      const categoryData = prev[selectedCategory];
-      const newPlayoffs = { ...categoryData.playoffs };
-      const matchIndex = newPlayoffs.matches.findIndex((m) => m.id === matchId);
+      const categoryData = prev[selectedCategory]
+      const newPlayoffs = { ...categoryData.playoffs }
+      const matchIndex = newPlayoffs.matches.findIndex((m) => m.id === matchId)
 
       if (matchIndex !== -1) {
-        newPlayoffs.matches[matchIndex].score = { player1Score, player2Score };
-        const currentMatch = newPlayoffs.matches[matchIndex];
+        newPlayoffs.matches[matchIndex].score = { player1Score, player2Score }
+        const currentMatch = newPlayoffs.matches[matchIndex]
         const winner =
           player1Score > player2Score
             ? currentMatch.player1
-            : currentMatch.player2;
+            : currentMatch.player2
 
         // Update next round matches
         const nextMatch = newPlayoffs.matches.find((m) =>
           m.previousMatches?.includes(matchId)
-        );
+        )
         if (nextMatch) {
           if (nextMatch.previousMatches[0] === matchId) {
-            nextMatch.player1 = winner;
+            nextMatch.player1 = winner
           } else {
-            nextMatch.player2 = winner;
+            nextMatch.player2 = winner
           }
         }
       }
@@ -420,52 +399,26 @@ const TournamentApp = () => {
           ...categoryData,
           playoffs: newPlayoffs,
         },
-      };
-    });
-    setEditingMatch(null);
-  };
+      }
+    })
+    setEditingMatch(null)
+  }
 
   const startPlayoffs = () => {
-    const categoryData = tournamentData[selectedCategory];
-    const playoffs = createPlayoffBracket(categoryData.groups);
+    const categoryData = tournamentData[selectedCategory]
+    const playoffs = createPlayoffBracket(categoryData.groups)
     setTournamentData((prev) => ({
       ...prev,
       [selectedCategory]: {
         ...prev[selectedCategory],
         playoffs,
       },
-    }));
-    setView("playoffs");
-  };
-
-  // Rendering methods
-  const renderHomePage = () => (
-    <main className="container mx-auto p-4 min-h-screen">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-12">
-          Table Tennis Tournament
-        </h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              category={category}
-              data={tournamentData[category.id]}
-              onClick={() => setSelectedCategory(category.id)}
-            />
-          ))}
-        </div>
-
-        <div className="mt-12 text-center text-sm text-muted-foreground">
-          <p>Select a category to view matches and standings</p>
-        </div>
-      </div>
-    </main>
-  );
+    }))
+    setView("playoffs")
+  }
 
   const renderCategoryView = () => {
-    const categoryData = tournamentData[selectedCategory];
+    const categoryData = tournamentData[selectedCategory]
 
     if (view === "playoffs" && categoryData.playoffs) {
       return (
@@ -477,63 +430,13 @@ const TournamentApp = () => {
           onSetScore={handlePlayoffScore}
           onCancelEdit={() => setEditingMatch(null)}
         />
-      );
+      )
     }
 
     const allMatchesComplete = categoryData.groups.every((group) =>
       group.matches.every((match) => match.score !== null)
-    );
+    )
 
-    return (
-      <div className="container mx-auto p-4">
-        <div className="flex items-center gap-4 mb-8">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSelectedCategory(null)}
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </Button>
-          <h1 className="text-3xl font-bold">
-            {categories.find((c) => c.id === selectedCategory)?.title}
-          </h1>
-          <div className="ml-auto flex gap-2">
-            {categoryData.playoffs ? (
-              <Button onClick={() => setView("playoffs")}>View Playoffs</Button>
-            ) : allMatchesComplete ? (
-              <Button onClick={startPlayoffs}>Start Playoffs</Button>
-            ) : null}
-            <Button
-              variant="outline"
-              onClick={() => handleShuffle(selectedCategory)}
-            >
-              <Shuffle className="h-4 w-4 mr-2" />
-              Shuffle Groups
-            </Button>
-          </div>
-        </div>
+}
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {categoryData.groups.map((group, groupIndex) => (
-            <GroupCard
-              key={groupIndex}
-              group={group}
-              groupIndex={groupIndex}
-              standings={calculateStandings(group)}
-              editingMatch={editingMatch}
-              onEditMatch={setEditingMatch}
-              onSetScore={(matchId, score1, score2) =>
-                handleSetScore(groupIndex, matchId, score1, score2)
-              }
-              onCancelEdit={() => setEditingMatch(null)}
-            />
-          ))}
-        </div>
-      </div>
-    );
-  };
-
-  return selectedCategory ? renderCategoryView() : renderHomePage();
-};
-
-export default TournamentApp;
+export default TournamentApp

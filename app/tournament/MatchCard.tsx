@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button } from '../components/ui/button';
-import { Edit2 } from 'lucide-react';
-import ScoreButtons from './ScoreButtons';
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { Edit2 } from "lucide-react";
+import ScoreButtons from "./ScoreButtons";
 
 const MatchCard = ({ match, isEditing, onEdit, onSetScore, onCancelEdit }) => (
   <div className="p-3 bg-secondary/50 rounded-lg hover:bg-secondary/70 transition-colors">
@@ -24,7 +24,9 @@ const MatchCard = ({ match, isEditing, onEdit, onSetScore, onCancelEdit }) => (
       ) : (
         <span className="text-sm text-muted-foreground px-4">vs</span>
       )}
-      <span className="flex-1 text-right font-medium">{match.player2.name}</span>
+      <span className="flex-1 text-right font-medium">
+        {match.player2.name}
+      </span>
     </div>
     {(isEditing || !match.score) && (
       <div className="mt-3 pt-3 border-t border-border/50">
