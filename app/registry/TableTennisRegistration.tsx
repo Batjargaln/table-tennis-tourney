@@ -6,16 +6,20 @@ import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 
 import { registerPlayer } from "./action"
-import { FormData, FormErrors, SkillGroup } from "./types"
+import { FormData, FormErrors } from "./types"
 
 const TableTennisRegistration: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
     city: "",
-    age: "",
+    age: 0,
     gender: "",
-    skillGroups: "",
+    skillGroups: {
+      beginner: false,
+      intermediate: false,
+      advanced: false,
+    },
   })
 
   const [errors, setErrors] = useState<FormErrors>({})
@@ -30,7 +34,10 @@ const TableTennisRegistration: React.FC = () => {
       setFormData({
         ...formData,
         [name]: value,
-        skillGroups: "",
+        skillGroups: {
+          ...formData.skillGroups,
+          beginner: false,
+        },
       })
     } else {
       setFormData({
@@ -41,9 +48,13 @@ const TableTennisRegistration: React.FC = () => {
   }
 
   const handleSkillGroupChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    const { name, checked } = e.target
     setFormData({
       ...formData,
-      skillGroups: e.target.id as SkillGroup,
+      skillGroups: {
+        ...formData.skillGroups,
+        [name]: checked,
+      },
     })
   }
 
@@ -53,12 +64,6 @@ const TableTennisRegistration: React.FC = () => {
     if (!formData.firstName.trim()) newErrors.firstName = "Нэрээ оруулна уу!"
     if (!formData.lastName.trim()) newErrors.lastName = "Овогоо оруулна уу!"
     if (!formData.city.trim()) newErrors.city = "Хотоо оруулна уу!"
-
-    if (!formData.age) {
-      newErrors.age = "Насаа оруулна уу!"
-    } else if (isNaN(Number(formData.age)) || parseInt(formData.age) <= 0) {
-      newErrors.age = "Please enter a valid age"
-    }
 
     if (!formData.gender) newErrors.gender = "Хүйсээ сонгоно уу!"
 
@@ -186,10 +191,10 @@ const TableTennisRegistration: React.FC = () => {
           {formData.gender !== "female" && (
             <div className="flex items-center mb-2">
               <input
-                type="radio"
+                type="checkbox"
                 id="beginner"
-                name="skillGroups"
-                checked={formData.skillGroups === "beginner"}
+                name="beginner"
+                checked={formData.skillGroups.beginner}
                 onChange={handleSkillGroupChange}
                 className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
               />
@@ -201,10 +206,10 @@ const TableTennisRegistration: React.FC = () => {
 
           <div className="flex items-center mb-2">
             <input
-              type="radio"
+              type="checkbox"
               id="intermediate"
-              name="skillGroups"
-              checked={formData.skillGroups === "intermediate"}
+              name="intermediate"
+              checked={formData.skillGroups.intermediate}
               onChange={handleSkillGroupChange}
               className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
@@ -215,10 +220,10 @@ const TableTennisRegistration: React.FC = () => {
 
           <div className="flex items-center mb-2">
             <input
-              type="radio"
+              type="checkbox"
               id="advanced"
-              name="skillGroups"
-              checked={formData.skillGroups === "advanced"}
+              name="advanced"
+              checked={formData.skillGroups.advanced}
               onChange={handleSkillGroupChange}
               className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
