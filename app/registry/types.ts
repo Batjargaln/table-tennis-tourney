@@ -1,19 +1,22 @@
-export type SkillGroup = "beginner" | "intermediate" | "advanced"
+export interface SkillGroups {
+  beginner: boolean
+  intermediate: boolean
+  advanced: boolean
+}
 
 export interface FormData {
   firstName: string
   lastName: string
   city: string
-  age: string
+  age: number
   gender: string
-  skillGroups: SkillGroup | ""
+  skillGroups: SkillGroups
 }
 
 export interface FormErrors {
   firstName?: string
   lastName?: string
   city?: string
-  age?: string
   gender?: string
   skillGroups?: string
 }
