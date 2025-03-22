@@ -26,11 +26,11 @@ const TableTennisRegistration: React.FC = () => {
     const { name, value } = e.target
 
     // If changing gender to female, reset beginner options
-    if (name === "gender" && value === "female") {
+    if (name === "gender") {
       setFormData({
         ...formData,
         [name]: value,
-        skillGroups: "beginner",
+        skillGroups: "",
       })
     } else {
       setFormData({
