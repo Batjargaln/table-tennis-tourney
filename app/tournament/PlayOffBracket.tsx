@@ -1,8 +1,10 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import { ChevronLeft, Trophy } from 'lucide-react';
-import PlayoffMatchCard from './PlayOffMatchCard';
+import { ChevronLeft, Trophy } from "lucide-react"
+import React from "react"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+
+import PlayoffMatchCard from "./PlayOffMatchCard"
 
 const PlayoffBracket = ({
   playoffs,
@@ -10,24 +12,22 @@ const PlayoffBracket = ({
   editingMatch,
   onEditMatch,
   onSetScore,
-  onCancelEdit
+  onCancelEdit,
 }) => {
-  const quarterFinals = playoffs.matches.filter(m => m.round === 'quarter');
-  const semiFinals = playoffs.matches.filter(m => m.round === 'semi');
-  const final = playoffs.matches.find(m => m.round === 'final');
+  const quarterFinals = playoffs.matches.filter((m) => m.round === "quarter")
+  const semiFinals = playoffs.matches.filter((m) => m.round === "semi")
+  const final = playoffs.matches.find((m) => m.round === "final")
 
   const winner = final?.score
-    ? (final.score.player1Score > final.score.player2Score ? final.player1 : final.player2)
-    : null;
+    ? final.score.player1Score > final.score.player2Score
+      ? final.player1
+      : final.player2
+    : null
 
   return (
     <div className="container mx-auto p-4 max-w-7xl">
       <div className="flex items-center gap-4 mb-8">
-        <Button
-          variant="ghost"
-          className="gap-2"
-          onClick={onBackToGroups}
-        >
+        <Button variant="ghost" className="gap-2" onClick={onBackToGroups}>
           <ChevronLeft className="h-4 w-4" />
           Back to Groups
         </Button>
@@ -55,13 +55,15 @@ const PlayoffBracket = ({
             <div className="w-1 h-6 bg-blue-500/50 rounded"></div>
             <h3 className="text-lg font-bold">Quarter Finals</h3>
           </div>
-          {quarterFinals.map(match => (
+          {quarterFinals.map((match) => (
             <PlayoffMatchCard
               key={match.id}
               match={match}
               isEditing={editingMatch === match.id}
               onEdit={() => onEditMatch(match.id)}
-              onSetScore={(score1, score2) => onSetScore(match.id, score1, score2)}
+              onSetScore={(score1, score2) =>
+                onSetScore(match.id, score1, score2)
+              }
               onCancelEdit={onCancelEdit}
             />
           ))}
@@ -71,13 +73,15 @@ const PlayoffBracket = ({
             <div className="w-1 h-6 bg-green-500/50 rounded"></div>
             <h3 className="text-lg font-bold">Semi Finals</h3>
           </div>
-          {semiFinals.map(match => (
+          {semiFinals.map((match) => (
             <PlayoffMatchCard
               key={match.id}
               match={match}
               isEditing={editingMatch === match.id}
               onEdit={() => onEditMatch(match.id)}
-              onSetScore={(score1, score2) => onSetScore(match.id, score1, score2)}
+              onSetScore={(score1, score2) =>
+                onSetScore(match.id, score1, score2)
+              }
               onCancelEdit={onCancelEdit}
             />
           ))}
@@ -92,14 +96,16 @@ const PlayoffBracket = ({
               match={final}
               isEditing={editingMatch === final.id}
               onEdit={() => onEditMatch(final.id)}
-              onSetScore={(score1, score2) => onSetScore(final.id, score1, score2)}
+              onSetScore={(score1, score2) =>
+                onSetScore(final.id, score1, score2)
+              }
               onCancelEdit={onCancelEdit}
             />
           )}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PlayoffBracket;
+export default PlayoffBracket

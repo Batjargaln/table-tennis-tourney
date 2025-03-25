@@ -1,7 +1,7 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/card';
-import GroupStandings from './GroupStandings';
-import MatchCard from './MatchCard';
+import React from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import GroupStandings from "./GroupStandings";
+import MatchCard from "./MatchCard";
 
 const GroupCard = ({
   group,
@@ -10,7 +10,7 @@ const GroupCard = ({
   editingMatch,
   onEditMatch,
   onSetScore,
-  onCancelEdit
+  onCancelEdit,
 }) => (
   <Card>
     <CardHeader>
@@ -28,7 +28,9 @@ const GroupCard = ({
                 match={match}
                 isEditing={editingMatch === match.id}
                 onEdit={() => onEditMatch(match.id)}
-                onSetScore={(score1, score2) => onSetScore(match.id, score1, score2)}
+                onSetScore={(score1, score2) =>
+                  onSetScore(match.id, score1, score2)
+                }
                 onCancelEdit={onCancelEdit}
               />
             ))}
