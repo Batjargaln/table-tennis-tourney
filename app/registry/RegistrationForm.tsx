@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { registerPlayer } from "./action"
 import { FormData, FormErrors } from "./types"
 
-const TableTennisRegistration: React.FC = () => {
+const RegistrationForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -247,4 +247,4 @@ const TableTennisRegistration: React.FC = () => {
   )
 }
 
-export default TableTennisRegistration
+export default RegistrationForm

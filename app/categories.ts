@@ -1,4 +1,4 @@
-import { ICategory } from "@/utils/ICategory"
+import { ICategory } from "@/lib/ICategory"
 
 export const categories: ICategory[] = [
   {

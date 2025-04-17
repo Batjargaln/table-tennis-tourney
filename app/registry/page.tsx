@@ -1,6 +1,6 @@
 import React from "react"
 
-import TableTennisRegistration from "./TableTennisRegistration"
+import RegistrationForm from "./RegistrationForm"
 
 function page() {
   return (
@@ -8,7 +8,7 @@ function page() {
       <h2 className="text-2xl font-bold text-blue-800 mb-6">
         Тэмцээний бүртгэл
       </h2>
-      <TableTennisRegistration />
+      <RegistrationForm />
     </div>
   )
 }
