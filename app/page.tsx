@@ -1,6 +1,7 @@
-"use client";
-import TournamentBanner from "@/components/TournamentBanner";
-import Image from "next/image";
+import Image from "next/image"
+
+import TournamentBanner from "@/components/TournamentBanner"
+
 // import Link from "next/link";
 
 export default function Home() {
@@ -33,5 +34,5 @@ export default function Home() {
         <TournamentBanner />
       </div>
     </main>
-  );
+  )
 }
