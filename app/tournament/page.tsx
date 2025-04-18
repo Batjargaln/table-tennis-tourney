@@ -1,3 +1,5 @@
+import { MAX_PLAYERS_PER_GROUP } from "@/lib/constants"
+
 import { categories } from "../categories"
 import { CategoryCard } from "./CategoryCard"
 import { fetchCategoryData } from "./action"
@@ -14,20 +16,23 @@ export default async function Home() {
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              id={category.id}
-              title={category.title}
-              description={category.description}
-              players={Number(
-                data.find((item) => item.gender === category.gender)?.[
-                  category.skillLevel
-                ]
-              )}
-              groups={0}
-            />
-          ))}
+          {categories.map((category) => {
+            const playerCount = Number(
+              data.find((item) => item.gender === category.gender)?.[
+                category.skillLevel
+              ]
+            )
+            return (
+              <CategoryCard
+                key={category.id}
+                id={category.id}
+                title={category.title}
+                description={category.description}
+                players={playerCount}
+                groups={Math.ceil(playerCount / MAX_PLAYERS_PER_GROUP)}
+              />
+            )
+          })}
         </div>
 
         <div className="mt-12 text-center text-sm text-muted-foreground">
