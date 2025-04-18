@@ -2,28 +2,31 @@ import Link from "next/link"
 import React from "react"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ICategory } from "@/lib/ICategory"
 
 interface CategoryCardProps {
-  category: ICategory
+  id: string
+  title: string
+  description: string
   players: number
   groups: number
 }
 
 export const CategoryCard = ({
-  category,
+  id,
+  title,
+  description,
   players,
   groups,
 }: CategoryCardProps) => (
-  <Link href={`tournament/${category.id}`}>
+  <Link href={`tournament/${id}`}>
     <Card className="group cursor-pointer transition-all hover:shadow-lg">
       <CardHeader className="border-b border-border/50">
         <CardTitle className="group-hover:text-primary transition-colors">
-          {category.title}
+          {title}
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-4">
-        <p className="text-muted-foreground">{category.description}</p>
+        <p className="text-muted-foreground">{description}</p>
         <div className="mt-4 text-sm text-muted-foreground">
           <div className="flex justify-between items-center">
             <span>Players:</span>
