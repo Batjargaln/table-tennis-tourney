@@ -1,46 +1,19 @@
 "use client"
 
-import _ from "lodash"
+import orderBy from "lodash.orderby"
+import shuffle from "lodash.shuffle"
+import { ChevronLeft, Shuffle } from "lucide-react"
 import React, { useState } from "react"
 
+import { Button } from "@/components/ui/button"
 
+import { categories } from "../categories"
+import CategoryCard from "./CategoryCard"
+import GroupCard from "./GroupCard"
 import PlayoffBracket from "./PlayOffBracket"
 
-// Tournament data structure
-const initialTournamentData = {
-  "beginner-mens": {
-    players: Array.from({ length: 17 }, (_, i) => ({
-      id: `bm-${i + 1}`,
-      name: `Beginner ${i + 1}`,
-    })),
-  },
-  "intermediate-mens": {
-    players: Array.from({ length: 16 }, (_, i) => ({
-      id: `im-${i + 1}`,
-      name: `Intermediate ${i + 1}`,
-    })),
-  },
-  "advanced-mens": {
-    players: Array.from({ length: 16 }, (_, i) => ({
-      id: `am-${i + 1}`,
-      name: `Advanced ${i + 1}`,
-    })),
-  },
-  "intermediate-womens": {
-    players: Array.from({ length: 16 }, (_, i) => ({
-      id: `w-${i + 1}`,
-      name: `Women Intermediate ${i + 1}`,
-    })),
-  },
-  "advanced-womens": {
-    players: Array.from({ length: 16 }, (_, i) => ({
-      id: `w-${i + 1}`,
-      name: `Women advanced ${i + 1}`,
-    })),
-  },
-}
-
-const TournamentApp = () => {
+const TournamentApp = ({ initialTournamentData }) => {
+  const [selectedCategory, setSelectedCategory] = useState(null)
   const [editingMatch, setEditingMatch] = useState(null)
   const [view, setView] = useState("groups")
 
@@ -86,12 +59,11 @@ const TournamentApp = () => {
           }
         })
 
-        const sortedStandings = _.orderBy(
+        const sortedStandings = orderBy(
           standings,
           ["wins", "matchesWon"],
           ["desc", "desc"]
         )
-
         return sortedStandings.slice(0, 2).map((player, rank) => ({
           ...player,
           groupId: String.fromCharCode(65 + groupIndex),
@@ -232,7 +204,7 @@ const TournamentApp = () => {
       }
     })
 
-    return _.orderBy(standings, ["wins"], ["desc"])
+    return orderBy(standings, ["wins"], ["desc"])
   }
 
   const [tournamentData, setTournamentData] = useState(() => {
@@ -294,7 +266,7 @@ const TournamentApp = () => {
       const maxPlayersPerGroup = 4
       let groupSlicingIndex = 0
       const newGroups = []
-      const totalPlayers = _.shuffle([...prev[categoryId].players])
+      const totalPlayers = shuffle([...prev[categoryId].players])
       const totalPlayersCurrentGroup = totalPlayers.length
       let numberOfGroups = Math.ceil(
         totalPlayersCurrentGroup / maxPlayersPerGroup
@@ -417,6 +389,32 @@ const TournamentApp = () => {
     setView("playoffs")
   }
 
+  // Rendering methods
+  const renderHomePage = () => (
+    <main className="container mx-auto p-4 min-h-screen">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-4xl font-bold text-center mb-12">
+          Table Tennis Tournament
+        </h1>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {categories.map((category) => (
+            <CategoryCard
+              key={category.id}
+              category={category}
+              data={tournamentData[category.id]}
+              onClick={() => setSelectedCategory(category.id)}
+            />
+          ))}
+        </div>
+
+        <div className="mt-12 text-center text-sm text-muted-foreground">
+          <p>Select a category to view matches and standings</p>
+        </div>
+      </div>
+    </main>
+  )
+
   const renderCategoryView = () => {
     const categoryData = tournamentData[selectedCategory]
 
@@ -437,6 +435,56 @@ const TournamentApp = () => {
       group.matches.every((match) => match.score !== null)
     )
 
+    return (
+      <div className="container mx-auto p-4">
+        <div className="flex items-center gap-4 mb-8">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => setSelectedCategory(null)}
+          >
+            <ChevronLeft className="h-6 w-6" />
+          </Button>
+          <h1 className="text-3xl font-bold">
+            {categories.find((c) => c.id === selectedCategory)?.title}
+          </h1>
+          <div className="ml-auto flex gap-2">
+            {categoryData.playoffs ? (
+              <Button onClick={() => setView("playoffs")}>View Playoffs</Button>
+            ) : allMatchesComplete ? (
+              <Button onClick={startPlayoffs}>Start Playoffs</Button>
+            ) : null}
+            <Button
+              variant="outline"
+              onClick={() => handleShuffle(selectedCategory)}
+            >
+              <Shuffle className="h-4 w-4 mr-2" />
+              Shuffle Groups
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          {categoryData.groups.map((group, groupIndex) => (
+            <GroupCard
+              key={groupIndex}
+              group={group}
+              groupIndex={groupIndex}
+              standings={calculateStandings(group)}
+              editingMatch={editingMatch}
+              onEditMatch={setEditingMatch}
+              onSetScore={(matchId, score1, score2) =>
+                handleSetScore(groupIndex, matchId, score1, score2)
+              }
+              onCancelEdit={() => setEditingMatch(null)}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  return selectedCategory ? renderCategoryView() : renderHomePage()
 }
 
 export default TournamentApp

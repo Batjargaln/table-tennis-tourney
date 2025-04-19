@@ -50,15 +50,7 @@ export type Database = {
       }
     }
     Views: {
-      count_by_category: {
-        Row: {
-          advanced: number | null
-          beginner: number | null
-          gender: string | null
-          intermediate: number | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       [_ in never]: never

@@ -1,7 +1,9 @@
-import React from "react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import GroupStandings from "./GroupStandings";
-import MatchCard from "./MatchCard";
+import React from "react"
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+
+import GroupStandings from "./GroupStandings"
+import MatchCard from "./MatchCard"
 
 const GroupCard = ({
   group,
@@ -39,6 +41,6 @@ const GroupCard = ({
       </div>
     </CardContent>
   </Card>
-);
+)
 
-export default GroupCard;
+export default GroupCard
