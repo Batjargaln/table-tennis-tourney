@@ -6,6 +6,7 @@ import { ChevronLeft, Shuffle } from "lucide-react"
 import React, { useState } from "react"
 
 import { Button } from "@/components/ui/button"
+import { MAX_PLAYERS_PER_GROUP, MIN_PLAYERS_PER_GROUP } from "@/lib/constants"
 
 import { categories } from "../categories"
 import CategoryCard from "./CategoryCard"
@@ -210,18 +211,16 @@ const TournamentApp = ({ initialTournamentData }) => {
   const [tournamentData, setTournamentData] = useState(() => {
     // Initialize tournament data with groups
     const data = { ...initialTournamentData }
-    const minPlayersPerGroup = 3
-    const maxPlayersPerGroup = 4
     Object.keys(data).forEach((categoryId) => {
       const groups = []
       let groupSlicingIndex = 0
       const totalPlayersCurrentGroup = data[categoryId].players.length
       let numberOfGroups = Math.ceil(
-        totalPlayersCurrentGroup / maxPlayersPerGroup
+        totalPlayersCurrentGroup / MAX_PLAYERS_PER_GROUP
       )
 
       while (
-        totalPlayersCurrentGroup / numberOfGroups < minPlayersPerGroup &&
+        totalPlayersCurrentGroup / numberOfGroups < MIN_PLAYERS_PER_GROUP &&
         numberOfGroups > 1
       ) {
         numberOfGroups--
@@ -262,17 +261,15 @@ const TournamentApp = ({ initialTournamentData }) => {
   // Event handlers
   const handleShuffle = (categoryId) => {
     setTournamentData((prev) => {
-      const minPlayersPerGroup = 3
-      const maxPlayersPerGroup = 4
       let groupSlicingIndex = 0
       const newGroups = []
       const totalPlayers = shuffle([...prev[categoryId].players])
       const totalPlayersCurrentGroup = totalPlayers.length
       let numberOfGroups = Math.ceil(
-        totalPlayersCurrentGroup / maxPlayersPerGroup
+        totalPlayersCurrentGroup / MAX_PLAYERS_PER_GROUP
       )
       while (
-        totalPlayersCurrentGroup / numberOfGroups < minPlayersPerGroup &&
+        totalPlayersCurrentGroup / numberOfGroups < MIN_PLAYERS_PER_GROUP &&
         numberOfGroups > 1
       ) {
         numberOfGroups--
