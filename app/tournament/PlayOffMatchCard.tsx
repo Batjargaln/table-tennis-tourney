@@ -36,7 +36,9 @@ const PlayoffMatchCard = ({
         <div className="rounded-lg hover:bg-secondary/50 transition-colors">
           <div className="flex items-center justify-between p-3">
             <div className="flex-1">
-              <span className="font-medium">{match.player1.name}</span>
+              <span className="font-medium">
+                {match.player1.firstName} {match.player1.firstName}
+              </span>
               <span className="text-xs ml-2 text-muted-foreground">
                 ({match.player1.groupId}
                 {match.player1.rank})
@@ -57,7 +59,9 @@ const PlayoffMatchCard = ({
                 ({match.player2.groupId}
                 {match.player2.rank})
               </span>
-              <span className="font-medium">{match.player2.name}</span>
+              <span className="font-medium">
+                {match.player2.firstName} {match.player2.lastName}
+              </span>
             </div>
           </div>
           {(isEditing || !match.score) && (

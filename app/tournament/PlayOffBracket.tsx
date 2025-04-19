@@ -40,7 +40,7 @@ const PlayoffBracket = ({
             <Trophy className="h-12 w-12 mx-auto mb-3 text-yellow-500" />
             <h3 className="text-2xl font-bold mb-2">Tournament Winner</h3>
             <p className="text-xl">
-              {winner.name}
+              {winner.firstName} {winner.lastName}
               <span className="text-base ml-2 text-muted-foreground">
                 (Group {winner.groupId})
               </span>
