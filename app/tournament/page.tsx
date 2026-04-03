@@ -1,8 +1,11 @@
+import { cookies } from "next/headers"
 import TournamentApp from "./TournamentManager"
 import { fetchInitialTournamentData } from "./action"
 
 export default async function TournamentPage() {
   const initialTournamentData = await fetchInitialTournamentData()
+  const cookieStore = await cookies()
+  const isAdmin = cookieStore.get("admin_token")?.value === process.env.ADMIN_SECRET
 
   return (
     <div
@@ -90,7 +93,7 @@ export default async function TournamentPage() {
       </div>
 
       <div className="relative z-10">
-        <TournamentApp initialTournamentData={initialTournamentData} />
+        <TournamentApp initialTournamentData={initialTournamentData} isAdmin={isAdmin} />
       </div>
     </div>
   )

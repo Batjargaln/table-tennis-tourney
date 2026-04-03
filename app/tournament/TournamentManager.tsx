@@ -13,7 +13,7 @@ import GroupCard from "./GroupCard"
 import { LangProvider, useLang } from "./LangContext"
 import PlayoffBracket from "./PlayOffBracket"
 
-const TournamentApp = ({ initialTournamentData }) => {
+const TournamentApp = ({ initialTournamentData, isAdmin }) => {
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [editingMatch, setEditingMatch] = useState(null)
   const [view, setView] = useState("groups")
@@ -507,7 +507,7 @@ function CategoryView({
   calculateStandings, onBack, onViewPlayoffs, onStartPlayoffs,
   onShuffle, onEditMatch, onSetScore, onCancelEdit,
 }) {
-  const { t } = useLang()
+  const { t, isAdmin } = useLang()
   const title = categories.find((c) => c.id === selectedCategory)?.title ?? ""
 
   return (
@@ -538,7 +538,7 @@ function CategoryView({
             >
               {t.viewPlayoffs}
             </button>
-          ) : allMatchesComplete ? (
+          ) : isAdmin && allMatchesComplete ? (
             <button
               onClick={onStartPlayoffs}
               className="px-4 py-2 rounded-xl text-sm font-bold transition-transform hover:scale-105"
@@ -547,14 +547,16 @@ function CategoryView({
               {t.startPlayoffs}
             </button>
           ) : null}
-          <button
-            onClick={onShuffle}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors hover:bg-black/5"
-            style={{ border: "1px solid rgba(28,35,64,0.18)", color: "#1C2340" }}
-          >
-            <Shuffle className="h-4 w-4" />
-            {t.shuffle}
-          </button>
+          {isAdmin && (
+            <button
+              onClick={onShuffle}
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors hover:bg-black/5"
+              style={{ border: "1px solid rgba(28,35,64,0.18)", color: "#1C2340" }}
+            >
+              <Shuffle className="h-4 w-4" />
+              {t.shuffle}
+            </button>
+          )}
         </div>
       </div>
 
@@ -578,7 +580,7 @@ function CategoryView({
 
 function WrappedTournamentApp(props) {
   return (
-    <LangProvider>
+    <LangProvider isAdmin={props.isAdmin ?? false}>
       <TournamentApp {...props} />
     </LangProvider>
   )

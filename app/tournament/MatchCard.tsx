@@ -3,7 +3,7 @@ import { useLang } from "./LangContext"
 import ScoreButtons from "./ScoreButtons"
 
 const MatchCard = ({ match, isEditing, onEdit, onSetScore, onCancelEdit }) => {
-  const { t } = useLang()
+  const { t, isAdmin } = useLang()
 
   return (
     <div
@@ -35,7 +35,7 @@ const MatchCard = ({ match, isEditing, onEdit, onSetScore, onCancelEdit }) => {
         </span>
       </div>
 
-      {(isEditing || !match.score) && (
+      {isAdmin && (isEditing || !match.score) && (
         <div className="mt-2 pt-2" style={{ borderTop: "1px solid rgba(28,35,64,0.07)" }}>
           <ScoreButtons
             onSetScore={onSetScore}

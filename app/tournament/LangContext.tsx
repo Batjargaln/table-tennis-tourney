@@ -70,18 +70,20 @@ type LangContextType = {
   lang: Lang
   setLang: (l: Lang) => void
   t: Translations
+  isAdmin: boolean
 }
 
 const LangContext = createContext<LangContextType>({
   lang: "mn",
   setLang: () => {},
   t: translations.mn,
+  isAdmin: false,
 })
 
-export function LangProvider({ children }: { children: React.ReactNode }) {
+export function LangProvider({ children, isAdmin }: { children: React.ReactNode; isAdmin: boolean }) {
   const [lang, setLang] = useState<Lang>("mn")
   return (
-    <LangContext.Provider value={{ lang, setLang, t: translations[lang] }}>
+    <LangContext.Provider value={{ lang, setLang, t: translations[lang], isAdmin }}>
       {children}
     </LangContext.Provider>
   )

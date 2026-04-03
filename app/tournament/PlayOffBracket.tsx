@@ -90,7 +90,7 @@ const PlayoffBracket = ({
 
 /* Inline match card to avoid extra file */
 function PlayoffMatchCard({ match, accentColor, isEditing, onEdit, onSetScore, onCancelEdit }) {
-  const { t } = useLang()
+  const { t, isAdmin } = useLang()
   if (!match.player1 || !match.player2) return null
 
   return (
@@ -142,17 +142,19 @@ function PlayoffMatchCard({ match, accentColor, isEditing, onEdit, onSetScore, o
           )}
         </div>
 
-        {/* Score entry */}
-        {(isEditing || !match.score) ? (
-          <ScoreButtons onSetScore={onSetScore} onCancel={isEditing ? onCancelEdit : null} enterLabel={t.enterScore} />
-        ) : (
-          <button
-            onClick={onEdit}
-            className="text-xs font-semibold px-3 py-1 rounded-lg transition-colors hover:bg-black/5"
-            style={{ color: "rgba(28,35,64,0.4)", border: "1px solid rgba(28,35,64,0.1)" }}
-          >
-            ✎ edit
-          </button>
+        {/* Score entry — admin only */}
+        {isAdmin && (
+          (isEditing || !match.score) ? (
+            <ScoreButtons onSetScore={onSetScore} onCancel={isEditing ? onCancelEdit : null} enterLabel={t.enterScore} />
+          ) : (
+            <button
+              onClick={onEdit}
+              className="text-xs font-semibold px-3 py-1 rounded-lg transition-colors hover:bg-black/5"
+              style={{ color: "rgba(28,35,64,0.4)", border: "1px solid rgba(28,35,64,0.1)" }}
+            >
+              ✎ edit
+            </button>
+          )
         )}
       </div>
     </div>
