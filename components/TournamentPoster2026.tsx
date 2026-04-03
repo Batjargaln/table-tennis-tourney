@@ -324,7 +324,7 @@ export default function TournamentPoster2026() {
               }}
             >
               <Calendar className="w-3.5 h-3.5 shrink-0" />
-              {t("4 сарын 19, 2026", "April 19, 2026")}
+              {t("4 сарын 19, 2026 · 10:00 AM", "April 19, 2026 · 10:00 AM")}
             </div>
             <a
               href="https://maps.google.com/?q=6403+Chillum+Pl+NW,+Washington,+DC+20012"
