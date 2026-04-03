@@ -290,7 +290,7 @@ export default function TournamentPoster2026() {
             className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight tracking-tight mb-1"
             style={{ color: "#1C2340" }}
           >
-            {t("АНУ-ын Монголчуудын", "USA Mongolians")}
+            {t("Вашингтон Д.С. орчмын Монголчуудын", "D.C. Area Mongolians")}
           </h1>
           <h2
             className="text-xl sm:text-2xl md:text-3xl font-bold mb-5"
