@@ -9,13 +9,6 @@ export const categories: ICategory[] = [
     skillLevel: "beginner",
   },
   {
-    id: "intermediate-male",
-    title: "Men's Singles - Intermediate",
-    description: "For players with some competitive experience",
-    gender: "male",
-    skillLevel: "intermediate",
-  },
-  {
     id: "advanced-male",
     title: "Men's Singles - Advanced",
     description: "For experienced competitive players",
@@ -23,11 +16,11 @@ export const categories: ICategory[] = [
     skillLevel: "advanced",
   },
   {
-    id: "intermediate-female",
-    title: "Women's Singles - intermediate",
-    description: "For players with some competitive experience",
+    id: "beginner-female",
+    title: "Women's Singles - Beginner",
+    description: "For players new to competitive table tennis",
     gender: "female",
-    skillLevel: "intermediate",
+    skillLevel: "beginner",
   },
   {
     id: "advanced-female",

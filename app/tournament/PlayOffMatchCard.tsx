@@ -37,7 +37,7 @@ const PlayoffMatchCard = ({
           <div className="flex items-center justify-between p-3">
             <div className="flex-1">
               <span className="font-medium">
-                {match.player1.firstName} {match.player1.firstName}
+                {match.player1.firstName} {match.player1.lastName}
               </span>
               <span className="text-xs ml-2 text-muted-foreground">
                 ({match.player1.groupId}

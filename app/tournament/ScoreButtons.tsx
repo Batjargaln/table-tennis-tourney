@@ -1,33 +1,41 @@
-import { X } from "lucide-react"
 import React from "react"
 
-import { Button } from "@/components/ui/button"
+const scores = [[3,0],[3,1],[3,2],[2,3],[1,3],[0,3]] as const
 
-const ScoreButtons = ({ onSetScore, onCancel }) => (
-  <div className="flex flex-wrap gap-2 justify-center">
-    <Button size="sm" onClick={() => onSetScore(3, 0)}>
-      3-0
-    </Button>
-    <Button size="sm" onClick={() => onSetScore(3, 1)}>
-      3-1
-    </Button>
-    <Button size="sm" onClick={() => onSetScore(3, 2)}>
-      3-2
-    </Button>
-    <Button size="sm" onClick={() => onSetScore(2, 3)}>
-      2-3
-    </Button>
-    <Button size="sm" onClick={() => onSetScore(1, 3)}>
-      1-3
-    </Button>
-    <Button size="sm" onClick={() => onSetScore(0, 3)}>
-      0-3
-    </Button>
-    {onCancel && (
-      <Button size="sm" variant="ghost" onClick={onCancel}>
-        <X className="h-4 w-4" />
-      </Button>
+const ScoreButtons = ({ onSetScore, onCancel, enterLabel }: {
+  onSetScore: (s1: number, s2: number) => void
+  onCancel?: (() => void) | null
+  enterLabel?: string
+}) => (
+  <div>
+    {enterLabel && (
+      <p className="text-xs font-semibold mb-1.5" style={{ color: "rgba(28,35,64,0.4)" }}>{enterLabel}</p>
     )}
+    <div className="flex flex-wrap gap-1.5">
+      {scores.map(([s1, s2]) => (
+        <button
+          key={`${s1}-${s2}`}
+          onClick={() => onSetScore(s1, s2)}
+          className="px-3 py-1.5 rounded-lg text-xs font-bold transition-transform hover:scale-105"
+          style={{
+            background: s1 > s2 ? "rgba(28,55,160,0.08)" : "rgba(185,40,90,0.07)",
+            border: s1 > s2 ? "1px solid rgba(28,55,160,0.2)" : "1px solid rgba(220,100,140,0.2)",
+            color: "#1C2340",
+          }}
+        >
+          {s1}–{s2}
+        </button>
+      ))}
+      {onCancel && (
+        <button
+          onClick={onCancel}
+          className="px-3 py-1.5 rounded-lg text-xs font-bold transition-colors hover:bg-black/5"
+          style={{ border: "1px solid rgba(28,35,64,0.12)", color: "rgba(28,35,64,0.5)" }}
+        >
+          ✕
+        </button>
+      )}
+    </div>
   </div>
 )
 

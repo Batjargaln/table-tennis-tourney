@@ -1,43 +1,67 @@
 import React from "react"
+import { useLang } from "./LangContext"
 
-const GroupStandings = ({ standings }) => (
-  <div className="mt-4">
-    <h3 className="font-semibold mb-3">Standings</h3>
-    <div className="text-sm space-y-1.5">
-      {standings.map((player, index) => (
-        <div
-          key={player.id}
-          className={`flex justify-between items-center p-2.5 rounded-lg transition-colors ${
-            index === 0
-              ? "bg-gradient-to-r from-green-500/20 to-green-500/10 hover:from-green-500/30 hover:to-green-500/20"
-              : index === 1
-                ? "bg-gradient-to-r from-blue-500/20 to-blue-500/10 hover:from-blue-500/30 hover:to-blue-500/20"
-                : "bg-secondary hover:bg-secondary/70"
-          }`}
-        >
-          <div className="font-medium flex items-center gap-2">
-            <span className="text-lg">{index + 1}.</span>
-            <span>
-              {player.firstName} {player.lastName}
-            </span>
-            {index < 2 && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-background/50">
-                {index === 0 ? "1st" : "2nd"}
+const GroupStandings = ({ standings }) => {
+  const { t } = useLang()
+
+  return (
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: "rgba(28,35,64,0.4)" }}>
+        {t.standings}
+      </p>
+      <div className="space-y-1.5">
+        {standings.map((player, index) => (
+          <div
+            key={player.id}
+            className="flex items-center justify-between px-3 py-2 rounded-xl text-sm"
+            style={{
+              background:
+                index === 0
+                  ? "linear-gradient(90deg, rgba(200,144,58,0.18), rgba(200,144,58,0.06))"
+                  : index === 1
+                  ? "linear-gradient(90deg, rgba(28,55,160,0.10), rgba(28,55,160,0.03))"
+                  : "rgba(28,35,64,0.04)",
+              border:
+                index === 0
+                  ? "1px solid rgba(200,144,58,0.28)"
+                  : index === 1
+                  ? "1px solid rgba(28,55,160,0.15)"
+                  : "1px solid rgba(28,35,64,0.08)",
+            }}
+          >
+            <div className="flex items-center gap-2">
+              <span
+                className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-black shrink-0"
+                style={{
+                  background: index === 0 ? "rgba(200,144,58,0.2)" : index === 1 ? "rgba(28,55,160,0.12)" : "rgba(28,35,64,0.08)",
+                  color: index === 0 ? "#A87028" : index === 1 ? "#2A5ABD" : "rgba(28,35,64,0.5)",
+                }}
+              >
+                {index + 1}
               </span>
-            )}
-          </div>
-          <div className="text-muted-foreground flex items-center gap-3">
-            <span>
-              {player.wins}W - {player.losses}L
+              <span className="font-semibold" style={{ color: "#1C2340" }}>
+                {player.firstName} {player.lastName}
+              </span>
+              {index < 2 && (
+                <span
+                  className="text-xs px-1.5 py-0.5 rounded-full font-bold"
+                  style={{
+                    background: index === 0 ? "rgba(200,144,58,0.15)" : "rgba(28,55,160,0.1)",
+                    color: index === 0 ? "#A87028" : "#2A5ABD",
+                  }}
+                >
+                  ↑ ADV
+                </span>
+              )}
+            </div>
+            <span className="text-xs font-semibold" style={{ color: "rgba(28,35,64,0.5)" }}>
+              {t.wl(player.wins, player.losses)}
             </span>
-            <span className="text-xs">
-              ({player.matchesWon}-{player.matchesLost})
-            </span>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 export default GroupStandings

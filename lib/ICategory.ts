@@ -3,5 +3,5 @@ export interface ICategory {
   title: string
   description: string
   gender: "male" | "female"
-  skillLevel: "beginner" | "intermediate" | "advanced"
+  skillLevel: "beginner" | "advanced"
 }

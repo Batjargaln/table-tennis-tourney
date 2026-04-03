@@ -234,30 +234,27 @@ export default function TournamentPoster2026() {
         </div>
 
         {/* Organizer / sponsor logos */}
-        <div className="flex items-center justify-center gap-2 mb-8 flex-nowrap">
+        <div className="flex items-center justify-center flex-wrap gap-2 mb-8">
           <Image
             src="/matta(1).png"
             alt="MATTA"
             width={160}
             height={160}
-            className="object-contain"
-            style={{ maxHeight: 160 }}
+            className="object-contain w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36"
           />
           <Image
             src="/dc-mongol-real.png"
             alt="DC Mongol Club"
             width={160}
             height={160}
-            className="object-contain"
-            style={{ maxHeight: 160 }}
+            className="object-contain w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40"
           />
           <Image
             src="/elchin(1).png"
             alt="Elchin"
             width={160}
             height={160}
-            className="object-contain"
-            style={{ maxHeight: 160 }}
+            className="object-contain w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36"
           />
         </div>
 
@@ -477,6 +474,18 @@ export default function TournamentPoster2026() {
               }}
             >
               {t("Бүртгүүлэх →", "Register Now →")}
+            </Button>
+          </Link>
+          <Link href="/participants" className="sm:w-auto w-full">
+            <Button
+              variant="ghost"
+              className="w-full sm:w-auto px-6 sm:px-9 py-3 rounded-xl font-bold text-base transition-colors hover:bg-black/5"
+              style={{
+                color: "rgba(28,35,64,0.65)",
+                border: "1px solid rgba(28,35,64,0.18)",
+              }}
+            >
+              {t("Оролцогчид", "Participants")}
             </Button>
           </Link>
           <Link href="/rulebook" className="sm:w-auto w-full">

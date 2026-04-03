@@ -5,12 +5,12 @@ import shuffle from "lodash.shuffle"
 import { ChevronLeft, Shuffle } from "lucide-react"
 import React, { useState } from "react"
 
-import { Button } from "@/components/ui/button"
 import { MAX_PLAYERS_PER_GROUP, MIN_PLAYERS_PER_GROUP } from "@/lib/constants"
 
 import { categories } from "../categories"
 import CategoryCard from "./CategoryCard"
 import GroupCard from "./GroupCard"
+import { LangProvider, useLang } from "./LangContext"
 import PlayoffBracket from "./PlayOffBracket"
 
 const TournamentApp = ({ initialTournamentData }) => {
@@ -388,28 +388,10 @@ const TournamentApp = ({ initialTournamentData }) => {
 
   // Rendering methods
   const renderHomePage = () => (
-    <main className="container mx-auto p-4 min-h-screen">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-12">
-          Table Tennis Tournament
-        </h1>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              category={category}
-              data={tournamentData[category.id]}
-              onClick={() => setSelectedCategory(category.id)}
-            />
-          ))}
-        </div>
-
-        <div className="mt-12 text-center text-sm text-muted-foreground">
-          <p>Select a category to view matches and standings</p>
-        </div>
-      </div>
-    </main>
+    <HomeView
+      tournamentData={tournamentData}
+      onSelect={setSelectedCategory}
+    />
   )
 
   const renderCategoryView = () => {
@@ -433,55 +415,173 @@ const TournamentApp = ({ initialTournamentData }) => {
     )
 
     return (
-      <div className="container mx-auto p-4">
-        <div className="flex items-center gap-4 mb-8">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setSelectedCategory(null)}
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </Button>
-          <h1 className="text-3xl font-bold">
-            {categories.find((c) => c.id === selectedCategory)?.title}
-          </h1>
-          <div className="ml-auto flex gap-2">
-            {categoryData.playoffs ? (
-              <Button onClick={() => setView("playoffs")}>View Playoffs</Button>
-            ) : allMatchesComplete ? (
-              <Button onClick={startPlayoffs}>Start Playoffs</Button>
-            ) : null}
-            <Button
-              variant="outline"
-              onClick={() => handleShuffle(selectedCategory)}
-            >
-              <Shuffle className="h-4 w-4 mr-2" />
-              Shuffle Groups
-            </Button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {categoryData.groups.map((group, groupIndex) => (
-            <GroupCard
-              key={groupIndex}
-              group={group}
-              groupIndex={groupIndex}
-              standings={calculateStandings(group)}
-              editingMatch={editingMatch}
-              onEditMatch={setEditingMatch}
-              onSetScore={(matchId, score1, score2) =>
-                handleSetScore(groupIndex, matchId, score1, score2)
-              }
-              onCancelEdit={() => setEditingMatch(null)}
-            />
-          ))}
-        </div>
-      </div>
+      <CategoryView
+        categoryData={categoryData}
+        selectedCategory={selectedCategory}
+        allMatchesComplete={allMatchesComplete}
+        editingMatch={editingMatch}
+        calculateStandings={calculateStandings}
+        onBack={() => setSelectedCategory(null)}
+        onViewPlayoffs={() => setView("playoffs")}
+        onStartPlayoffs={startPlayoffs}
+        onShuffle={() => handleShuffle(selectedCategory)}
+        onEditMatch={setEditingMatch}
+        onSetScore={handleSetScore}
+        onCancelEdit={() => setEditingMatch(null)}
+      />
     )
   }
 
   return selectedCategory ? renderCategoryView() : renderHomePage()
 }
 
-export default TournamentApp
+/* ── Home page with language toggle ── */
+function HomeView({ tournamentData, onSelect }) {
+  const { lang, setLang, t } = useLang()
+  return (
+    <main className="container mx-auto px-4 py-10 min-h-screen">
+      <div className="max-w-4xl mx-auto">
+        {/* Lang toggle */}
+        <div className="flex justify-end mb-6">
+          <div className="flex rounded-full overflow-hidden text-sm" style={{ border: "1px solid rgba(28,35,64,0.18)" }}>
+            {(["mn", "en"] as const).map((l) => (
+              <button
+                key={l}
+                onClick={() => setLang(l)}
+                className="px-4 py-1.5 font-bold transition-all"
+                style={{
+                  background: lang === l ? "rgba(28,35,64,0.1)" : "transparent",
+                  color: lang === l ? "#1C2340" : "rgba(28,35,64,0.38)",
+                }}
+              >
+                {l === "mn" ? "МОН" : "ENG"}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Header */}
+        <div className="text-center mb-10">
+          <p className="text-xs font-bold tracking-[0.35em] uppercase mb-3" style={{ color: "rgba(28,35,64,0.35)" }}>
+            {t.subtitle}
+          </p>
+          <h1 className="text-3xl sm:text-4xl font-black mb-2" style={{ color: "#1C2340" }}>
+            {t.title}
+          </h1>
+          <p className="text-sm font-semibold" style={{ color: "#B8762A" }}>{t.titleEn}</p>
+          <div className="flex items-center gap-3 mt-5 max-w-xs mx-auto">
+            <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, transparent, rgba(255,138,174,0.5))" }} />
+            <svg width="16" height="16" viewBox="0 0 20 20" aria-hidden="true">
+              <circle cx="10" cy="4"  r="2.5" fill="#FFB7C5" />
+              <circle cx="16" cy="10" r="2.5" fill="#FFB7C5" />
+              <circle cx="10" cy="16" r="2.5" fill="#FFB7C5" />
+              <circle cx="4"  cy="10" r="2.5" fill="#FFB7C5" />
+              <circle cx="10" cy="10" r="1.6" fill="#C8903A" />
+            </svg>
+            <div className="flex-1 h-px" style={{ background: "linear-gradient(90deg, rgba(255,138,174,0.5), transparent)" }} />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          {categories.map((category) => (
+            <CategoryCard
+              key={category.id}
+              category={category}
+              data={tournamentData[category.id]}
+              onClick={() => onSelect(category.id)}
+            />
+          ))}
+        </div>
+
+        <p className="mt-10 text-center text-xs" style={{ color: "rgba(28,35,64,0.35)" }}>
+          {t.selectCategory}
+        </p>
+      </div>
+    </main>
+  )
+}
+
+/* ── Category / group view ── */
+function CategoryView({
+  categoryData, selectedCategory, allMatchesComplete, editingMatch,
+  calculateStandings, onBack, onViewPlayoffs, onStartPlayoffs,
+  onShuffle, onEditMatch, onSetScore, onCancelEdit,
+}) {
+  const { t } = useLang()
+  const title = categories.find((c) => c.id === selectedCategory)?.title ?? ""
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div
+        className="flex items-center gap-3 mb-8 px-5 py-4 rounded-2xl"
+        style={{
+          background: "rgba(255,255,255,0.65)",
+          backdropFilter: "blur(12px)",
+          border: "1px solid rgba(255,183,197,0.35)",
+          boxShadow: "0 2px 16px rgba(28,35,64,0.06)",
+        }}
+      >
+        <button
+          onClick={onBack}
+          className="flex items-center justify-center w-9 h-9 rounded-full transition-colors hover:bg-black/5"
+          style={{ color: "#1C2340" }}
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <h1 className="text-xl font-black" style={{ color: "#1C2340" }}>{title}</h1>
+        <div className="ml-auto flex gap-2">
+          {categoryData.playoffs ? (
+            <button
+              onClick={onViewPlayoffs}
+              className="px-4 py-2 rounded-xl text-sm font-bold transition-transform hover:scale-105"
+              style={{ background: "linear-gradient(135deg, #D4963C, #A87028)", color: "#FFF8F0", boxShadow: "0 3px 12px rgba(200,144,58,0.3)" }}
+            >
+              {t.viewPlayoffs}
+            </button>
+          ) : allMatchesComplete ? (
+            <button
+              onClick={onStartPlayoffs}
+              className="px-4 py-2 rounded-xl text-sm font-bold transition-transform hover:scale-105"
+              style={{ background: "linear-gradient(135deg, #D4963C, #A87028)", color: "#FFF8F0", boxShadow: "0 3px 12px rgba(200,144,58,0.3)" }}
+            >
+              {t.startPlayoffs}
+            </button>
+          ) : null}
+          <button
+            onClick={onShuffle}
+            className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors hover:bg-black/5"
+            style={{ border: "1px solid rgba(28,35,64,0.18)", color: "#1C2340" }}
+          >
+            <Shuffle className="h-4 w-4" />
+            {t.shuffle}
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {categoryData.groups.map((group, groupIndex) => (
+          <GroupCard
+            key={groupIndex}
+            group={group}
+            groupIndex={groupIndex}
+            standings={calculateStandings(group)}
+            editingMatch={editingMatch}
+            onEditMatch={onEditMatch}
+            onSetScore={(matchId, score1, score2) => onSetScore(groupIndex, matchId, score1, score2)}
+            onCancelEdit={onCancelEdit}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+function WrappedTournamentApp(props) {
+  return (
+    <LangProvider>
+      <TournamentApp {...props} />
+    </LangProvider>
+  )
+}
+
+export default WrappedTournamentApp
