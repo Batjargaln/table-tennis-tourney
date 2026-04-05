@@ -51,7 +51,8 @@ const CATEGORIES = [
 export default function ParticipantsView({ players }: { players: Player[] }) {
   const [lang, setLang] = useState<Lang>("mn")
   const t = T[lang]
-  const total = new Set(players.map((p) => p.id)).size
+  const totalUnique = players.length
+  const totalEntries = CATEGORIES.reduce((sum, { filter }) => sum + players.filter(filter).length, 0)
 
   return (
     <section
@@ -141,12 +142,22 @@ export default function ParticipantsView({ players }: { players: Player[] }) {
             {t.title}
           </h1>
           <p className="text-sm font-semibold mb-3" style={{ color: "#B8762A" }}>{t.titleSub}</p>
-          <span
-            className="inline-block text-sm font-bold px-4 py-1.5 rounded-full"
-            style={{ background: "rgba(200,144,58,0.1)", border: "1px solid rgba(200,144,58,0.28)", color: "#A87028" }}
-          >
-            {t.total(total)}
-          </span>
+          <div className="flex items-center justify-center gap-3 flex-wrap">
+            <span
+              className="inline-block text-sm font-bold px-4 py-1.5 rounded-full"
+              style={{ background: "rgba(200,144,58,0.1)", border: "1px solid rgba(200,144,58,0.28)", color: "#A87028" }}
+            >
+              {t.total(totalUnique)}
+            </span>
+            {totalEntries !== totalUnique && (
+              <span
+                className="inline-block text-xs font-semibold px-3 py-1.5 rounded-full"
+                style={{ background: "rgba(28,35,64,0.05)", border: "1px solid rgba(28,35,64,0.12)", color: "rgba(28,35,64,0.5)" }}
+              >
+                {lang === "mn" ? `${totalEntries} оролцоо (2 ангилалд бүртгүүлсэн тоглогч бий)` : `${totalEntries} entries (some players in 2 categories)`}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Category groups */}
