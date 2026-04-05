@@ -1,15 +1,7 @@
 "use server"
 
 import { createClient } from "@supabase/supabase-js"
-
-interface Player {
-  id: string
-  firstName: string
-  lastName: string
-  email: string
-  age: number
-  gender: string
-}
+import { revalidatePath } from "next/cache"
 
 function supabase() {
   return createClient(
@@ -19,37 +11,61 @@ function supabase() {
 }
 
 export async function fetchInitialTournamentData() {
-  const { data, error } = await supabase()
-    .from("players")
-    .select("id, first_name, last_name, email, age, gender, skill_beginner, skill_advanced")
+  const [playersRes, statesRes] = await Promise.all([
+    supabase()
+      .from("players")
+      .select("id, first_name, last_name, email, age, gender, skill_beginner, skill_advanced"),
+    supabase()
+      .from("tournament_state")
+      .select("category_id, groups, playoffs"),
+  ])
 
-  if (error) throw new Error(error.message)
+  if (playersRes.error) throw new Error(playersRes.error.message)
 
-  // Map snake_case DB rows to camelCase player objects
-  const players: (Player & { skill_beginner: boolean; skill_advanced: boolean })[] =
-    (data ?? []).map((row) => ({
-      id: row.id,
-      firstName: row.first_name,
-      lastName: row.last_name,
-      email: row.email,
-      age: row.age,
-      gender: row.gender,
-      skill_beginner: row.skill_beginner,
-      skill_advanced: row.skill_advanced,
-    }))
+  const players = (playersRes.data ?? []).map((row) => ({
+    id:             row.id,
+    firstName:      row.first_name,
+    lastName:       row.last_name,
+    email:          row.email,
+    age:            row.age,
+    gender:         row.gender,
+    skill_beginner: row.skill_beginner,
+    skill_advanced: row.skill_advanced,
+  }))
+
+  const stateMap = Object.fromEntries(
+    (statesRes.data ?? []).map((s) => [s.category_id, s])
+  )
+
+  const makeCategory = (filter: (p: typeof players[0]) => boolean, id: string) => ({
+    players:       players.filter(filter),
+    savedGroups:   stateMap[id]?.groups   ?? null,
+    savedPlayoffs: stateMap[id]?.playoffs ?? null,
+  })
 
   return {
-    "beginner-male": {
-      players: players.filter((p) => p.gender === "male" && p.skill_beginner),
-    },
-    "advanced-male": {
-      players: players.filter((p) => p.gender === "male" && p.skill_advanced),
-    },
-    "beginner-female": {
-      players: players.filter((p) => p.gender === "female" && p.skill_beginner),
-    },
-    "advanced-female": {
-      players: players.filter((p) => p.gender === "female" && p.skill_advanced),
-    },
+    "beginner-male":   makeCategory((p) => p.gender === "male"   && p.skill_beginner, "beginner-male"),
+    "advanced-male":   makeCategory((p) => p.gender === "male"   && p.skill_advanced, "advanced-male"),
+    "beginner-female": makeCategory((p) => p.gender === "female" && p.skill_beginner, "beginner-female"),
+    "advanced-female": makeCategory((p) => p.gender === "female" && p.skill_advanced, "advanced-female"),
   }
+}
+
+export async function saveCategoryState(categoryId: string, groups: any, playoffs: any) {
+  await supabase()
+    .from("tournament_state")
+    .upsert(
+      { category_id: categoryId, groups, playoffs, updated_at: new Date().toISOString() },
+      { onConflict: "category_id" }
+    )
+}
+
+export async function togglePaid(id: string, current: boolean) {
+  await supabase().from("players").update({ paid: !current }).eq("id", id)
+  revalidatePath("/admin")
+}
+
+export async function toggleCheckedIn(id: string, current: boolean) {
+  await supabase().from("players").update({ checked_in: !current }).eq("id", id)
+  revalidatePath("/admin")
 }

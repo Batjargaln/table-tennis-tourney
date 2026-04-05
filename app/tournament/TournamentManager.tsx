@@ -3,10 +3,11 @@
 import orderBy from "lodash.orderby"
 import shuffle from "lodash.shuffle"
 import { ChevronLeft, Shuffle } from "lucide-react"
-import React, { useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 import { MAX_PLAYERS_PER_GROUP, MIN_PLAYERS_PER_GROUP } from "@/lib/constants"
 
+import { saveCategoryState } from "./action"
 import { categories } from "../categories"
 import CategoryCard from "./CategoryCard"
 import GroupCard from "./GroupCard"
@@ -23,7 +24,6 @@ const TournamentApp = ({ initialTournamentData, isAdmin }) => {
     // Get top 2 players from each group
     const qualifiedPlayers = groups
       .map((group, groupIndex) => {
-        // Calculate standings for each group
         const standings = group.players.map((player) => ({
           ...player,
           matches: 0,
@@ -35,16 +35,10 @@ const TournamentApp = ({ initialTournamentData, isAdmin }) => {
 
         group.matches.forEach((match) => {
           if (match.score) {
-            const player1Standing = standings.find(
-              (s) => s.id === match.player1.id
-            )
-            const player2Standing = standings.find(
-              (s) => s.id === match.player2.id
-            )
-
+            const player1Standing = standings.find((s) => s.id === match.player1.id)
+            const player2Standing = standings.find((s) => s.id === match.player2.id)
             player1Standing.matches += 1
             player2Standing.matches += 1
-
             if (match.score.player1Score > match.score.player2Score) {
               player1Standing.wins += 1
               player2Standing.losses += 1
@@ -52,7 +46,6 @@ const TournamentApp = ({ initialTournamentData, isAdmin }) => {
               player2Standing.wins += 1
               player1Standing.losses += 1
             }
-
             player1Standing.matchesWon += match.score.player1Score
             player1Standing.matchesLost += match.score.player2Score
             player2Standing.matchesWon += match.score.player2Score
@@ -60,101 +53,79 @@ const TournamentApp = ({ initialTournamentData, isAdmin }) => {
           }
         })
 
-        const sortedStandings = orderBy(
-          standings,
-          ["wins", "matchesWon"],
-          ["desc", "desc"]
-        )
-        return sortedStandings.slice(0, 2).map((player, rank) => ({
-          ...player,
-          groupId: String.fromCharCode(65 + groupIndex),
-          rank: rank + 1,
-        }))
+        return orderBy(standings, ["wins", "matchesWon"], ["desc", "desc"])
+          .slice(0, 2)
+          .map((player, rank) => ({
+            ...player,
+            groupId: String.fromCharCode(65 + groupIndex),
+            rank: rank + 1,
+          }))
       })
       .flat()
 
-    // Create quarter-final matches
-    const quarterFinals = [
-      {
-        id: "QF1",
-        player1: qualifiedPlayers.find(
-          (p) => p.groupId === "A" && p.rank === 1
-        ),
-        player2: qualifiedPlayers.find(
-          (p) => p.groupId === "D" && p.rank === 2
-        ),
-        score: null,
-        round: "quarter",
-      },
-      {
-        id: "QF2",
-        player1: qualifiedPlayers.find(
-          (p) => p.groupId === "B" && p.rank === 1
-        ),
-        player2: qualifiedPlayers.find(
-          (p) => p.groupId === "C" && p.rank === 2
-        ),
-        score: null,
-        round: "quarter",
-      },
-      {
-        id: "QF3",
-        player1: qualifiedPlayers.find(
-          (p) => p.groupId === "C" && p.rank === 1
-        ),
-        player2: qualifiedPlayers.find(
-          (p) => p.groupId === "B" && p.rank === 2
-        ),
-        score: null,
-        round: "quarter",
-      },
-      {
-        id: "QF4",
-        player1: qualifiedPlayers.find(
-          (p) => p.groupId === "D" && p.rank === 1
-        ),
-        player2: qualifiedPlayers.find(
-          (p) => p.groupId === "A" && p.rank === 2
-        ),
-        score: null,
-        round: "quarter",
-      },
+    // Seed: group winners first, then runners-up
+    const seeded = [
+      ...qualifiedPlayers.filter((p) => p.rank === 1),
+      ...qualifiedPlayers.filter((p) => p.rank === 2),
     ]
 
-    // Create semi-final placeholders
-    const semiFinals = [
-      {
-        id: "SF1",
-        player1: null,
-        player2: null,
-        score: null,
-        round: "semi",
-        previousMatches: ["QF1", "QF2"],
-      },
-      {
-        id: "SF2",
-        player1: null,
-        player2: null,
-        score: null,
-        round: "semi",
-        previousMatches: ["QF3", "QF4"],
-      },
-    ]
+    // Find next power of 2 for bracket size
+    let bracketSize = 1
+    while (bracketSize < seeded.length) bracketSize *= 2
 
-    // Create final placeholder
-    const final = {
-      id: "F1",
-      player1: null,
-      player2: null,
-      score: null,
-      round: "final",
-      previousMatches: ["SF1", "SF2"],
+    // Fill remaining slots with BYEs (null)
+    const slots = [...seeded, ...Array(bracketSize - seeded.length).fill(null)]
+
+    const allMatches = []
+
+    // Round 1: pair slot[i] vs slot[bracketSize-1-i]
+    const round1: any[] = []
+    for (let i = 0; i < bracketSize / 2; i++) {
+      const p1 = slots[i]
+      const p2 = slots[bracketSize - 1 - i]
+      const isBye = p1 !== null && p2 === null
+      round1.push({
+        id: `R${bracketSize}_M${i + 1}`,
+        player1: p1,
+        player2: p2,
+        score: isBye ? { player1Score: 1, player2Score: 0 } : null,
+        round: bracketSize,
+        isBye,
+        previousMatches: [],
+      })
+    }
+    allMatches.push(...round1)
+
+    // Build subsequent rounds, pre-filling winners of BYE matches
+    const getWinner = (m) => {
+      if (m.isBye) return m.player1
+      if (m.score) return m.score.player1Score > m.score.player2Score ? m.player1 : m.player2
+      return null
     }
 
-    return {
-      matches: [...quarterFinals, ...semiFinals, final],
-      qualifiedPlayers,
+    let prevRound = round1
+    let size = bracketSize / 2
+    while (size >= 2) {
+      const nextRound: any[] = []
+      for (let i = 0; i < size / 2; i++) {
+        const matchA = prevRound[i * 2]
+        const matchB = prevRound[i * 2 + 1]
+        nextRound.push({
+          id: `R${size}_M${i + 1}`,
+          player1: getWinner(matchA),
+          player2: getWinner(matchB),
+          score: null,
+          round: size,
+          isBye: false,
+          previousMatches: [matchA.id, matchB.id],
+        })
+      }
+      allMatches.push(...nextRound)
+      prevRound = nextRound
+      size /= 2
     }
+
+    return { matches: allMatches, qualifiedPlayers }
   }
   const generateGroupMatches = (players) => {
     const matches = []
@@ -209,9 +180,21 @@ const TournamentApp = ({ initialTournamentData, isAdmin }) => {
   }
 
   const [tournamentData, setTournamentData] = useState(() => {
-    // Initialize tournament data with groups
     const data = { ...initialTournamentData }
     Object.keys(data).forEach((categoryId) => {
+      const { savedGroups, savedPlayoffs } = data[categoryId]
+
+      // Use persisted state if available
+      if (savedGroups) {
+        data[categoryId] = {
+          players:  data[categoryId].players,
+          groups:   savedGroups,
+          playoffs: savedPlayoffs ?? null,
+        }
+        return
+      }
+
+      // Otherwise build fresh groups from players
       const groups = []
       let groupSlicingIndex = 0
       const totalPlayersCurrentGroup = data[categoryId].players.length
@@ -234,22 +217,15 @@ const TournamentApp = ({ initialTournamentData, isAdmin }) => {
         .map((size, index) => {
           return index < extraPlayers ? size + 1 : size
         })
-      for (
-        let i = 0;
-        i < data[categoryId].players.length;
-        i += groupSizes[groupSlicingIndex]
-      ) {
-        const groupPlayers = data[categoryId].players.slice(
-          i,
-          Math.min(
-            i + groupSizes[groupSlicingIndex],
-            data[categoryId].players.length
-          )
-        )
+      let i = 0
+      while (i < data[categoryId].players.length) {
+        const size = groupSizes[groupSlicingIndex]
+        const groupPlayers = data[categoryId].players.slice(i, Math.min(i + size, data[categoryId].players.length))
         groups.push({
           players: groupPlayers,
           matches: generateGroupMatches(groupPlayers),
         })
+        i += size
         groupSlicingIndex++
       }
       data[categoryId].groups = groups
@@ -257,6 +233,21 @@ const TournamentApp = ({ initialTournamentData, isAdmin }) => {
     })
     return data
   })
+
+  // Auto-save to DB whenever tournament state changes
+  const prevDataRef = useRef<typeof tournamentData | null>(null)
+  useEffect(() => {
+    if (prevDataRef.current === null) {
+      prevDataRef.current = tournamentData
+      return
+    }
+    Object.keys(tournamentData).forEach((categoryId) => {
+      if (tournamentData[categoryId] !== prevDataRef.current![categoryId]) {
+        saveCategoryState(categoryId, tournamentData[categoryId].groups, tournamentData[categoryId].playoffs)
+      }
+    })
+    prevDataRef.current = tournamentData
+  }, [tournamentData])
 
   // Event handlers
   const handleShuffle = (categoryId) => {
@@ -283,19 +274,15 @@ const TournamentApp = ({ initialTournamentData, isAdmin }) => {
         .map((size, index) => {
           return index < extraPlayers ? size + 1 : size
         })
-      for (
-        let i = 0;
-        i < totalPlayersCurrentGroup;
-        i += groupSizes[groupSlicingIndex]
-      ) {
-        const groupPlayers = totalPlayers.slice(
-          i,
-          Math.min(i + groupSizes[groupSlicingIndex], totalPlayersCurrentGroup)
-        )
+      let si = 0
+      while (si < totalPlayersCurrentGroup) {
+        const size = groupSizes[groupSlicingIndex]
+        const groupPlayers = totalPlayers.slice(si, Math.min(si + size, totalPlayersCurrentGroup))
         newGroups.push({
           players: groupPlayers,
           matches: generateGroupMatches(groupPlayers),
         })
+        si += size
         groupSlicingIndex++
       }
       return {

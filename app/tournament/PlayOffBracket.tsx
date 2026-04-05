@@ -2,38 +2,76 @@ import { ChevronLeft, Trophy } from "lucide-react"
 import React from "react"
 import { useLang } from "./LangContext"
 
+const ROUND_COLORS: Record<number, string> = {
+  2:  "rgba(200,144,58,0.7)",
+  4:  "rgba(34,139,34,0.5)",
+  8:  "rgba(28,55,160,0.5)",
+  16: "rgba(130,60,180,0.5)",
+  32: "rgba(185,60,60,0.5)",
+  64: "rgba(60,140,140,0.5)",
+}
+
+function getRoundLabel(size: number, t: any): string {
+  if (size === 2)  return t.final
+  if (size === 4)  return t.semiFinals
+  if (size === 8)  return t.quarterFinals
+  return t.roundOf(size)
+}
+
+function getRoundColor(size: number): string {
+  return ROUND_COLORS[size] ?? "rgba(100,100,100,0.5)"
+}
+
 const PlayoffBracket = ({
   playoffs, onBackToGroups, editingMatch,
   onEditMatch, onSetScore, onCancelEdit,
 }) => {
   const { t } = useLang()
-  const quarterFinals = playoffs.matches.filter((m) => m.round === "quarter")
-  const semiFinals    = playoffs.matches.filter((m) => m.round === "semi")
-  const final         = playoffs.matches.find((m)  => m.round === "final")
 
-  const winner = final?.score
-    ? final.score.player1Score > final.score.player2Score ? final.player1 : final.player2
+  // Collect unique round sizes, largest first (earliest round → final)
+  const roundSizes = [...new Set(playoffs.matches.map((m) => m.round as number))]
+    .sort((a, b) => b - a)
+
+  // For each round, only show non-BYE matches
+  const visibleRounds = roundSizes
+    .map((size) => ({
+      size,
+      matches: playoffs.matches.filter((m) => m.round === size && !m.isBye),
+    }))
+    .filter((r) => r.matches.length > 0)
+
+  const finalMatch = playoffs.matches.find((m) => m.round === 2)
+  const winner = finalMatch?.score
+    ? finalMatch.score.player1Score > finalMatch.score.player2Score
+      ? finalMatch.player1
+      : finalMatch.player2
     : null
 
-  const RoundSection = ({ label, color, matches }) => (
-    <div>
-      <div className="flex items-center gap-2 mb-4">
-        <div className="w-1 h-6 rounded" style={{ background: color }} />
-        <h3 className="text-base font-black" style={{ color: "#1C2340" }}>{label}</h3>
+  const RoundSection = ({ size, matches }) => {
+    const label = getRoundLabel(size, t)
+    const color = getRoundColor(size)
+    return (
+      <div>
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-6 rounded" style={{ background: color }} />
+          <h3 className="text-base font-black" style={{ color: "#1C2340" }}>{label}</h3>
+        </div>
+        {matches.map((match) => (
+          <PlayoffMatchCard
+            key={match.id}
+            match={match}
+            accentColor={color}
+            isEditing={editingMatch === match.id}
+            onEdit={() => onEditMatch(match.id)}
+            onSetScore={(s1, s2) => onSetScore(match.id, s1, s2)}
+            onCancelEdit={onCancelEdit}
+          />
+        ))}
       </div>
-      {matches.map((match) => (
-        <PlayoffMatchCard
-          key={match.id}
-          match={match}
-          accentColor={color}
-          isEditing={editingMatch === match.id}
-          onEdit={() => onEditMatch(match.id)}
-          onSetScore={(s1, s2) => onSetScore(match.id, s1, s2)}
-          onCancelEdit={onCancelEdit}
-        />
-      ))}
-    </div>
-  )
+    )
+  }
+
+  const numCols = Math.min(visibleRounds.length, 4)
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
@@ -79,10 +117,13 @@ const PlayoffBracket = ({
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <RoundSection label={t.quarterFinals} color="rgba(28,55,160,0.5)"  matches={quarterFinals} />
-        <RoundSection label={t.semiFinals}    color="rgba(34,139,34,0.5)"  matches={semiFinals} />
-        <RoundSection label={t.final}         color="rgba(200,144,58,0.7)" matches={final ? [final] : []} />
+      <div
+        className="grid grid-cols-1 gap-6"
+        style={{ gridTemplateColumns: `repeat(${numCols}, minmax(0, 1fr))` }}
+      >
+        {visibleRounds.map(({ size, matches }) => (
+          <RoundSection key={size} size={size} matches={matches} />
+        ))}
       </div>
     </div>
   )
