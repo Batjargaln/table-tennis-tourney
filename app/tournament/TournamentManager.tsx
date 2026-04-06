@@ -402,11 +402,16 @@ const TournamentApp = ({ initialTournamentData, isAdmin, initialCategory }) => {
       group.matches.every((match) => match.score !== null)
     )
 
+    const anyScoreEntered = categoryData.groups.some((group) =>
+      group.matches.some((match) => match.score !== null)
+    )
+
     return (
       <CategoryView
         categoryData={categoryData}
         selectedCategory={selectedCategory}
         allMatchesComplete={allMatchesComplete}
+        anyScoreEntered={anyScoreEntered}
         editingMatch={editingMatch}
         calculateStandings={calculateStandings}
         onBack={deselectCategory}
@@ -537,7 +542,7 @@ function HomeView({ tournamentData, onSelect }) {
 
 /* ── Category / group view ── */
 function CategoryView({
-  categoryData, selectedCategory, allMatchesComplete, editingMatch,
+  categoryData, selectedCategory, allMatchesComplete, anyScoreEntered, editingMatch,
   calculateStandings, onBack, onViewPlayoffs, onStartPlayoffs,
   onShuffle, onEditMatch, onSetScore, onCancelEdit,
 }) {
@@ -581,7 +586,7 @@ function CategoryView({
               {t.startPlayoffs}
             </button>
           ) : null}
-          {isAdmin && (
+          {isAdmin && !anyScoreEntered && (
             <button
               onClick={onShuffle}
               className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-bold transition-colors hover:bg-black/5"
