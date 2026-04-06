@@ -34,6 +34,8 @@ const translations = {
     womensAdvanced:  "Эмэгтэй - Ахисан шат",
     forBeginners:    "Ширээний теннис шинэ тоглогчдод",
     forAdvanced:     "Туршлагатай тоглогчдод",
+    mensSection:     "Эрэгтэй",
+    womensSection:   "Эмэгтэй",
   },
   en: {
     subtitle:        "USA Mongolians",
@@ -64,6 +66,8 @@ const translations = {
     womensAdvanced:  "Women's Advanced",
     forBeginners:    "For players new to competitive table tennis",
     forAdvanced:     "For experienced competitive players",
+    mensSection:     "Men's",
+    womensSection:   "Women's",
   },
 }
 

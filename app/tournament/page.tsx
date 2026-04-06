@@ -4,10 +4,18 @@ import { fetchInitialTournamentData } from "./action"
 
 export const dynamic = "force-dynamic"
 
-export default async function TournamentPage() {
+const VALID_CATEGORIES = ["beginner-male", "advanced-male", "beginner-female", "advanced-female"]
+
+export default async function TournamentPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ cat?: string }>
+}) {
   const initialTournamentData = await fetchInitialTournamentData()
   const cookieStore = await cookies()
   const isAdmin = cookieStore.get("admin_token")?.value === process.env.ADMIN_SECRET
+  const { cat } = await searchParams
+  const initialCategory = cat && VALID_CATEGORIES.includes(cat) ? cat : null
 
   return (
     <div
@@ -95,7 +103,7 @@ export default async function TournamentPage() {
       </div>
 
       <div className="relative z-10">
-        <TournamentApp initialTournamentData={initialTournamentData} isAdmin={isAdmin} />
+        <TournamentApp initialTournamentData={initialTournamentData} isAdmin={isAdmin} initialCategory={initialCategory} />
       </div>
     </div>
   )

@@ -3,6 +3,7 @@
 import orderBy from "lodash.orderby"
 import shuffle from "lodash.shuffle"
 import { ChevronLeft, Shuffle } from "lucide-react"
+import { useRouter } from "next/navigation"
 import React, { useEffect, useRef, useState } from "react"
 
 import { MAX_PLAYERS_PER_GROUP, MIN_PLAYERS_PER_GROUP } from "@/lib/constants"
@@ -14,10 +15,21 @@ import GroupCard from "./GroupCard"
 import { LangProvider, useLang } from "./LangContext"
 import PlayoffBracket from "./PlayOffBracket"
 
-const TournamentApp = ({ initialTournamentData, isAdmin }) => {
-  const [selectedCategory, setSelectedCategory] = useState(null)
+const TournamentApp = ({ initialTournamentData, isAdmin, initialCategory }) => {
+  const router = useRouter()
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory ?? null)
   const [editingMatch, setEditingMatch] = useState(null)
   const [view, setView] = useState("groups")
+
+  function selectCategory(id: string) {
+    setSelectedCategory(id)
+    router.replace(`/tournament?cat=${id}`, { scroll: false })
+  }
+
+  function deselectCategory() {
+    setSelectedCategory(null)
+    router.replace("/tournament", { scroll: false })
+  }
 
   // Helper functions
   const createPlayoffBracket = (groups) => {
@@ -373,14 +385,6 @@ const TournamentApp = ({ initialTournamentData, isAdmin }) => {
     setView("playoffs")
   }
 
-  // Rendering methods
-  const renderHomePage = () => (
-    <HomeView
-      tournamentData={tournamentData}
-      onSelect={setSelectedCategory}
-    />
-  )
-
   const renderCategoryView = () => {
     const categoryData = tournamentData[selectedCategory]
 
@@ -389,10 +393,7 @@ const TournamentApp = ({ initialTournamentData, isAdmin }) => {
         <PlayoffBracket
           playoffs={categoryData.playoffs}
           onBackToGroups={() => setView("groups")}
-          editingMatch={editingMatch}
-          onEditMatch={setEditingMatch}
           onSetScore={handlePlayoffScore}
-          onCancelEdit={() => setEditingMatch(null)}
         />
       )
     }
@@ -408,13 +409,22 @@ const TournamentApp = ({ initialTournamentData, isAdmin }) => {
         allMatchesComplete={allMatchesComplete}
         editingMatch={editingMatch}
         calculateStandings={calculateStandings}
-        onBack={() => setSelectedCategory(null)}
+        onBack={deselectCategory}
         onViewPlayoffs={() => setView("playoffs")}
         onStartPlayoffs={startPlayoffs}
         onShuffle={() => handleShuffle(selectedCategory)}
         onEditMatch={setEditingMatch}
         onSetScore={handleSetScore}
         onCancelEdit={() => setEditingMatch(null)}
+      />
+    )
+  }
+
+  function renderHomePage() {
+    return (
+      <HomeView
+        tournamentData={tournamentData}
+        onSelect={selectCategory}
       />
     )
   }
@@ -469,16 +479,53 @@ function HomeView({ tournamentData, onSelect }) {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {categories.map((category) => (
-            <CategoryCard
-              key={category.id}
-              category={category}
-              data={tournamentData[category.id]}
-              onClick={() => onSelect(category.id)}
-            />
-          ))}
-        </div>
+        {(["male", "female"] as const).map((gender) => (
+          <div key={gender} className="mb-6">
+            {/* Gender section header */}
+            <div className="flex items-center gap-3 mb-3">
+              <div
+                className="h-px flex-1"
+                style={{
+                  background: gender === "male"
+                    ? "linear-gradient(90deg, rgba(28,55,160,0.25), transparent)"
+                    : "linear-gradient(90deg, rgba(185,40,90,0.25), transparent)",
+                }}
+              />
+              <span
+                className="text-xs font-black uppercase tracking-[0.25em] px-1"
+                style={{
+                  color: gender === "male"
+                    ? "rgba(28,55,160,0.6)"
+                    : "rgba(185,40,90,0.7)",
+                }}
+              >
+                {gender === "male" ? t.mensSection : t.womensSection}
+              </span>
+              <div
+                className="h-px flex-1"
+                style={{
+                  background: gender === "male"
+                    ? "linear-gradient(90deg, transparent, rgba(28,55,160,0.25))"
+                    : "linear-gradient(90deg, transparent, rgba(185,40,90,0.25))",
+                }}
+              />
+            </div>
+
+            {/* Two tier cards: Intermediate + Advanced */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {categories
+                .filter((c) => c.gender === gender)
+                .map((category) => (
+                  <CategoryCard
+                    key={category.id}
+                    category={category}
+                    data={tournamentData[category.id]}
+                    onClick={() => onSelect(category.id)}
+                  />
+                ))}
+            </div>
+          </div>
+        ))}
 
         <p className="mt-10 text-center text-xs" style={{ color: "rgba(28,35,64,0.35)" }}>
           {t.selectCategory}

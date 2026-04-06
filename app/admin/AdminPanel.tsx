@@ -22,6 +22,7 @@ const T = {
   mn: {
     title:       "Админ самбар",
     subtitle:    "Тэмцээн удирдлага",
+    goTournament:"Тэмцээн →",
     logout:      "Гарах",
     search:      "Нэрээр хайх...",
     filter:      "Шүүлтүүр",
@@ -56,6 +57,7 @@ const T = {
   en: {
     title:       "Admin Panel",
     subtitle:    "Tournament Management",
+    goTournament:"Tournament →",
     logout:      "Logout",
     search:      "Search by name...",
     filter:      "Filter",
@@ -217,6 +219,19 @@ export default function AdminPanel({ players: initial }: { players: Player[] }) 
                 </button>
               ))}
             </div>
+            {/* Go to Tournament */}
+            <a
+              href="/tournament"
+              className="px-4 py-1.5 rounded-xl text-sm font-bold transition-colors"
+              style={{
+                background: "rgba(28,35,64,0.9)",
+                color: "#fff",
+                border: "1px solid rgba(28,35,64,0.9)",
+                textDecoration: "none",
+              }}
+            >
+              {t.goTournament}
+            </a>
             {/* Logout */}
             <form action={adminLogout}>
               <button
