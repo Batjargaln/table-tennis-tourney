@@ -3,7 +3,7 @@ import { ICategory } from "@/lib/ICategory"
 export const categories: ICategory[] = [
   {
     id: "beginner-male",
-    title: "Men's Singles - Beginner",
+    title: "Men's Singles - Intermediate",
     description: "For players new to competitive table tennis",
     gender: "male",
     skillLevel: "beginner",
@@ -17,7 +17,7 @@ export const categories: ICategory[] = [
   },
   {
     id: "beginner-female",
-    title: "Women's Singles - Beginner",
+    title: "Women's Singles - Intermediate",
     description: "For players new to competitive table tennis",
     gender: "female",
     skillLevel: "beginner",

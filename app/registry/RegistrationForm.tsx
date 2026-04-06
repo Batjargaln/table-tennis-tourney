@@ -170,8 +170,8 @@ const RegistrationForm: React.FC = () => {
                   <div className="w-2 h-2 rounded-full" style={{ background: "#C8903A" }} />
                 )}
               </div>
-              <span className="text-sm font-semibold" style={{ color: "#1C2340" }}>Анхан шат</span>
-              <span className="text-xs" style={{ color: "rgba(28,35,64,0.38)" }}>Beginner</span>
+              <span className="text-sm font-semibold" style={{ color: "#1C2340" }}>Сонирхогч</span>
+              <span className="text-xs" style={{ color: "rgba(28,35,64,0.38)" }}>Intermediate</span>
             </div>
             <span className="font-black text-sm" style={{ color: "#C8903A" }}>$30</span>
           </button>

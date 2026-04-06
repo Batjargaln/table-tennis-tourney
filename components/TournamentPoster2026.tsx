@@ -413,8 +413,8 @@ export default function TournamentPoster2026() {
                 >
                   <div className="flex items-center justify-between mb-2.5">
                     <div>
-                      <p className="font-semibold text-sm" style={{ color: "#1C2340" }}>{t("Анхан шат", "Beginner")}</p>
-                      <p className="text-xs" style={{ color: "rgba(28,35,64,0.4)" }}>{t("Beginner", "Анхан шат")}</p>
+                      <p className="font-semibold text-sm" style={{ color: "#1C2340" }}>{t("Сонирхогч", "Intermediate")}</p>
+                      <p className="text-xs" style={{ color: "rgba(28,35,64,0.4)" }}>{t("Intermediate", "Сонирхогч")}</p>
                     </div>
                     <span className="font-black text-xl" style={{ color: "#C8903A" }}>$30</span>
                   </div>
@@ -458,7 +458,7 @@ export default function TournamentPoster2026() {
             </span>
           </p>
           <p className="text-xs mt-1" style={{ color: "rgba(28,35,64,0.35)" }}>
-            {t("Анхан шатнаас ахисан руу шилжихэд +$20", "Beginner → Advanced upgrade: +$20")}
+            {t("Сонирхогчоос ахисан руу шилжихэд +$20", "Intermediate → Advanced upgrade: +$20")}
           </p>
         </div>
 
