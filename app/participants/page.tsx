@@ -1,6 +1,8 @@
 import { createClient } from "@supabase/supabase-js"
 import ParticipantsView from "./ParticipantsView"
 
+export const dynamic = "force-dynamic"
+
 async function fetchParticipants() {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

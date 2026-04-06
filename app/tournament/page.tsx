@@ -2,6 +2,8 @@ import { cookies } from "next/headers"
 import TournamentApp from "./TournamentManager"
 import { fetchInitialTournamentData } from "./action"
 
+export const dynamic = "force-dynamic"
+
 export default async function TournamentPage() {
   const initialTournamentData = await fetchInitialTournamentData()
   const cookieStore = await cookies()
