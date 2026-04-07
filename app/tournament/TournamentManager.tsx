@@ -484,16 +484,18 @@ function HomeView({ tournamentData, onSelect }) {
           </div>
         </div>
 
-        {(["male", "female"] as const).map((gender) => (
+        {(["male", "female", "mixed"] as const).map((gender) => (
           <div key={gender} className="mb-6">
-            {/* Gender section header */}
+            {/* Section header */}
             <div className="flex items-center gap-3 mb-3">
               <div
                 className="h-px flex-1"
                 style={{
                   background: gender === "male"
                     ? "linear-gradient(90deg, rgba(28,55,160,0.25), transparent)"
-                    : "linear-gradient(90deg, rgba(185,40,90,0.25), transparent)",
+                    : gender === "female"
+                    ? "linear-gradient(90deg, rgba(185,40,90,0.25), transparent)"
+                    : "linear-gradient(90deg, rgba(34,139,34,0.25), transparent)",
                 }}
               />
               <span
@@ -501,25 +503,29 @@ function HomeView({ tournamentData, onSelect }) {
                 style={{
                   color: gender === "male"
                     ? "rgba(28,55,160,0.6)"
-                    : "rgba(185,40,90,0.7)",
+                    : gender === "female"
+                    ? "rgba(185,40,90,0.7)"
+                    : "rgba(34,139,34,0.7)",
                 }}
               >
-                {gender === "male" ? t.mensSection : t.womensSection}
+                {gender === "male" ? t.mensSection : gender === "female" ? t.womensSection : t.doublesSection}
               </span>
               <div
                 className="h-px flex-1"
                 style={{
                   background: gender === "male"
                     ? "linear-gradient(90deg, transparent, rgba(28,55,160,0.25))"
-                    : "linear-gradient(90deg, transparent, rgba(185,40,90,0.25))",
+                    : gender === "female"
+                    ? "linear-gradient(90deg, transparent, rgba(185,40,90,0.25))"
+                    : "linear-gradient(90deg, transparent, rgba(34,139,34,0.25))",
                 }}
               />
             </div>
 
-            {/* Two tier cards: Intermediate + Advanced */}
+            {/* Category cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {categories
-                .filter((c) => c.gender === gender)
+                .filter((c) => c.gender === gender && tournamentData[c.id] !== undefined)
                 .map((category) => (
                   <CategoryCard
                     key={category.id}

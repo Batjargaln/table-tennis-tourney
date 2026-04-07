@@ -4,7 +4,7 @@ import { fetchInitialTournamentData } from "./action"
 
 export const dynamic = "force-dynamic"
 
-const VALID_CATEGORIES = ["beginner-male", "advanced-male", "beginner-female", "advanced-female"]
+const VALID_CATEGORIES = ["beginner-male", "advanced-male", "beginner-female", "advanced-female", "mixed-doubles"]
 
 export default async function TournamentPage({
   searchParams,

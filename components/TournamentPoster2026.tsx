@@ -437,6 +437,42 @@ export default function TournamentPoster2026() {
           ))}
         </div>
 
+        {/* Mixed Doubles card */}
+        <div
+          className="rounded-2xl overflow-hidden mb-4"
+          style={{
+            background: "rgba(255,255,255,0.75)",
+            backdropFilter: "blur(16px)",
+            border: "1px solid rgba(34,139,34,0.2)",
+            boxShadow: "0 2px 16px rgba(28,35,64,0.07)",
+          }}
+        >
+          <div
+            className="px-5 py-3.5 flex items-center gap-2.5"
+            style={{ background: "rgba(34,139,34,0.07)", borderBottom: "1px solid rgba(34,139,34,0.18)" }}
+          >
+            <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="#1a7a1a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="9" cy="7" r="3" />
+              <circle cx="15" cy="7" r="3" />
+              <path d="M3 20v-1a6 6 0 0 1 6-6h6a6 6 0 0 1 6 6v1" />
+            </svg>
+            <span className="font-black text-sm tracking-widest" style={{ color: "#1C2340" }}>
+              {t("ХОЛИМОГ ХОС", "MIXED DOUBLES")}
+            </span>
+          </div>
+          <div className="px-5 py-4 flex items-center justify-between gap-4">
+            <div>
+              <p className="font-semibold text-sm mb-0.5" style={{ color: "#1C2340" }}>
+                {t("Нэг эрэгтэй + нэг эмэгтэй баг", "One man + one woman per team")}
+              </p>
+              <p className="text-xs" style={{ color: "rgba(28,35,64,0.4)" }}>
+                {t("Mixed Doubles", "Холимог хос")}
+              </p>
+            </div>
+            <span className="font-black text-xl shrink-0" style={{ color: "#C8903A" }}>$30</span>
+          </div>
+        </div>
+
         {/* Fee summary */}
         <div
           className="rounded-2xl px-6 py-4 text-center mb-6"
@@ -458,7 +494,7 @@ export default function TournamentPoster2026() {
             </span>
           </p>
           <p className="text-xs mt-1" style={{ color: "rgba(28,35,64,0.35)" }}>
-            {t("Сонирхогчоос ахисан руу шилжихэд +$20", "Intermediate → Advanced upgrade: +$20")}
+            {t("Сонирхогчоос ахисан руу шилжихэд +$20 · Холимог хос $30", "Intermediate → Advanced upgrade: +$20 · Mixed Doubles $30")}
           </p>
         </div>
 

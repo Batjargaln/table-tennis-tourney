@@ -19,3 +19,13 @@ export async function toggleCheckedIn(id: string, current: boolean) {
   await supabase().from("players").update({ checked_in: !current }).eq("id", id)
   revalidatePath("/admin")
 }
+
+export async function toggleDoublesPaid(id: string, current: boolean) {
+  await supabase().from("doubles_teams").update({ paid: !current }).eq("id", id)
+  revalidatePath("/admin")
+}
+
+export async function toggleDoublesCheckedIn(id: string, current: boolean) {
+  await supabase().from("doubles_teams").update({ checked_in: !current }).eq("id", id)
+  revalidatePath("/admin")
+}

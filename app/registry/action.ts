@@ -15,6 +15,31 @@ interface PlayerData {
   }
 }
 
+export async function registerDoubles(data: {
+  player1FirstName: string
+  player1LastName: string
+  player2FirstName: string
+  player2LastName: string
+  email: string
+}) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+
+  const { error } = await supabase.from("doubles_teams").insert({
+    player1_first_name: data.player1FirstName,
+    player1_last_name:  data.player1LastName,
+    player2_first_name: data.player2FirstName,
+    player2_last_name:  data.player2LastName,
+    email:              data.email,
+  })
+
+  if (error) throw new Error(error.message)
+
+  redirect("/registry/done")
+}
+
 export async function registerPlayer(data: PlayerData) {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

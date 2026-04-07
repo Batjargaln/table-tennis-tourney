@@ -36,6 +36,9 @@ const translations = {
     forAdvanced:     "Туршлагатай тоглогчдод",
     mensSection:     "Эрэгтэй",
     womensSection:   "Эмэгтэй",
+    doublesSection:  "Хосын тэмцээн",
+    mixedDoubles:    "Холимог хос",
+    forDoubles:      "Нэг эрэгтэй + нэг эмэгтэй баг",
   },
   en: {
     subtitle:        "USA Mongolians",
@@ -68,6 +71,9 @@ const translations = {
     forAdvanced:     "For experienced competitive players",
     mensSection:     "Men's",
     womensSection:   "Women's",
+    doublesSection:  "Doubles",
+    mixedDoubles:    "Mixed Doubles",
+    forDoubles:      "One man + one woman per team",
   },
 }
 

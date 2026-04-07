@@ -11,10 +11,13 @@ function supabase() {
 }
 
 export async function fetchInitialTournamentData() {
-  const [playersRes, statesRes] = await Promise.all([
+  const [playersRes, doublesRes, statesRes] = await Promise.all([
     supabase()
       .from("players")
       .select("id, first_name, last_name, email, age, gender, skill_beginner, skill_advanced"),
+    supabase()
+      .from("doubles_teams")
+      .select("id, player1_first_name, player1_last_name, player2_first_name, player2_last_name, email"),
     supabase()
       .from("tournament_state")
       .select("category_id, groups, playoffs"),
@@ -33,21 +36,35 @@ export async function fetchInitialTournamentData() {
     skill_advanced: row.skill_advanced,
   }))
 
+  // Represent each doubles team as a single "player" entry so the bracket
+  // engine (which works with player objects) needs no changes.
+  const doublesAsPlayers = (doublesRes.data ?? []).map((row) => ({
+    id:             row.id,
+    firstName:      `${row.player1_first_name} ${row.player1_last_name}`,
+    lastName:       `& ${row.player2_first_name} ${row.player2_last_name}`,
+    email:          row.email ?? "",
+    age:            null,
+    gender:         "mixed",
+    skill_beginner: false,
+    skill_advanced: false,
+  }))
+
   const stateMap = Object.fromEntries(
     (statesRes.data ?? []).map((s) => [s.category_id, s])
   )
 
-  const makeCategory = (filter: (p: typeof players[0]) => boolean, id: string) => ({
-    players:       players.filter(filter),
+  const makeCategory = (entries: typeof players, id: string) => ({
+    players:       entries,
     savedGroups:   stateMap[id]?.groups   ?? null,
     savedPlayoffs: stateMap[id]?.playoffs ?? null,
   })
 
   return {
-    "beginner-male":   makeCategory((p) => p.gender === "male"   && p.skill_beginner, "beginner-male"),
-    "advanced-male":   makeCategory((p) => p.gender === "male"   && p.skill_advanced, "advanced-male"),
-    "beginner-female": makeCategory((p) => p.gender === "female" && p.skill_beginner, "beginner-female"),
-    "advanced-female": makeCategory((p) => p.gender === "female" && p.skill_advanced, "advanced-female"),
+    "beginner-male":   makeCategory(players.filter((p) => p.gender === "male"   && p.skill_beginner), "beginner-male"),
+    "advanced-male":   makeCategory(players.filter((p) => p.gender === "male"   && p.skill_advanced), "advanced-male"),
+    "beginner-female": makeCategory(players.filter((p) => p.gender === "female" && p.skill_beginner), "beginner-female"),
+    "advanced-female": makeCategory(players.filter((p) => p.gender === "female" && p.skill_advanced), "advanced-female"),
+    "mixed-doubles":   makeCategory(doublesAsPlayers, "mixed-doubles"),
   }
 }
 

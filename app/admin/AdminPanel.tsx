@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useTransition, useMemo } from "react"
-import { togglePaid, toggleCheckedIn } from "./action"
+import { togglePaid, toggleCheckedIn, toggleDoublesPaid, toggleDoublesCheckedIn } from "./action"
 import { adminLogout } from "./login/action"
 
 type Lang = "mn" | "en"
@@ -13,6 +13,17 @@ type Player = {
   gender: string
   skill_beginner: boolean
   skill_advanced: boolean
+  paid: boolean
+  checked_in: boolean
+  created_at: string
+}
+type DoublesTeam = {
+  id: string
+  player1_first_name: string
+  player1_last_name: string
+  player2_first_name: string
+  player2_last_name: string
+  email: string
   paid: boolean
   checked_in: boolean
   created_at: string
@@ -53,6 +64,10 @@ const T = {
     womBeg:      "Эмэгтэй · Анхан",
     womAdv:      "Эмэгтэй · Ахисан",
     noResults:   "Тоглогч олдсонгүй",
+    singles:     "Ганцаарчилсан",
+    doubles:     "Хос",
+    team:        "Баг",
+    noTeams:     "Баг олдсонгүй",
   },
   en: {
     title:       "Admin Panel",
@@ -88,6 +103,10 @@ const T = {
     womBeg:      "Women · Intermediate",
     womAdv:      "Women · Advanced",
     noResults:   "No players found",
+    singles:     "Singles",
+    doubles:     "Doubles",
+    team:        "Team",
+    noTeams:     "No teams found",
   },
 }
 
@@ -98,13 +117,15 @@ function categoryLabel(p: Player, t: typeof T.en) {
   return parts.join(", ")
 }
 
-export default function AdminPanel({ players: initial }: { players: Player[] }) {
-  const [lang, setLang]     = useState<Lang>("mn")
-  const [search, setSearch] = useState("")
-  const [gender, setGender] = useState("all")
-  const [skill, setSkill]   = useState("all")
+export default function AdminPanel({ players: initial, doublesTeams: initialDoubles }: { players: Player[]; doublesTeams: DoublesTeam[] }) {
+  const [lang, setLang]       = useState<Lang>("mn")
+  const [tab, setTab]         = useState<"singles" | "doubles">("singles")
+  const [search, setSearch]   = useState("")
+  const [gender, setGender]   = useState("all")
+  const [skill, setSkill]     = useState("all")
   const [statusF, setStatusF] = useState("all")
   const [players, setPlayers] = useState(initial)
+  const [doubles, setDoubles] = useState(initialDoubles)
   const [, startTransition]   = useTransition()
   const t = T[lang]
 
@@ -124,27 +145,38 @@ export default function AdminPanel({ players: initial }: { players: Player[] }) 
     })
   }, [players, search, gender, skill, statusF])
 
-  const stats = useMemo(() => ({
-    total:    players.length,
-    checkedIn: players.filter((p) => p.checked_in).length,
-    paid:     players.filter((p) => p.paid).length,
-    unpaid:   players.filter((p) => !p.paid).length,
-  }), [players])
+  const stats = useMemo(() => {
+    const src = tab === "singles" ? players : doubles
+    return {
+      total:    src.length,
+      checkedIn: src.filter((p) => p.checked_in).length,
+      paid:     src.filter((p) => p.paid).length,
+      unpaid:   src.filter((p) => !p.paid).length,
+    }
+  }, [players, doubles, tab])
 
   function optimisticToggle(id: string, field: "paid" | "checked_in") {
-    setPlayers((prev) =>
-      prev.map((p) => p.id === id ? { ...p, [field]: !p[field] } : p)
-    )
+    setPlayers((prev) => prev.map((p) => p.id === id ? { ...p, [field]: !p[field] } : p))
+  }
+  function optimisticDoublesToggle(id: string, field: "paid" | "checked_in") {
+    setDoubles((prev) => prev.map((d) => d.id === id ? { ...d, [field]: !d[field] } : d))
   }
 
   function handleToggleCheckedIn(p: Player) {
     optimisticToggle(p.id, "checked_in")
     startTransition(() => toggleCheckedIn(p.id, p.checked_in))
   }
-
   function handleTogglePaid(p: Player) {
     optimisticToggle(p.id, "paid")
     startTransition(() => togglePaid(p.id, p.paid))
+  }
+  function handleDoublesCheckedIn(d: DoublesTeam) {
+    optimisticDoublesToggle(d.id, "checked_in")
+    startTransition(() => toggleDoublesCheckedIn(d.id, d.checked_in))
+  }
+  function handleDoublesPaid(d: DoublesTeam) {
+    optimisticDoublesToggle(d.id, "paid")
+    startTransition(() => toggleDoublesPaid(d.id, d.paid))
   }
 
   const Pill = ({ active, label }: { active: boolean; label: string }) => (
@@ -245,6 +277,21 @@ export default function AdminPanel({ players: initial }: { players: Player[] }) 
           </div>
         </div>
 
+        {/* Singles / Doubles tab */}
+        <div className="flex rounded-2xl overflow-hidden mb-6"
+          style={{ border: "1px solid rgba(28,35,64,0.13)", background: "rgba(255,255,255,0.5)" }}>
+          {(["singles", "doubles"] as const).map((tb) => (
+            <button key={tb} onClick={() => setTab(tb)}
+              className="flex-1 py-2.5 text-sm font-bold transition-all"
+              style={{
+                background: tab === tb ? "rgba(28,35,64,0.09)" : "transparent",
+                color: tab === tb ? "#1C2340" : "rgba(28,35,64,0.4)",
+              }}>
+              {t[tb]}
+            </button>
+          ))}
+        </div>
+
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
           {[
@@ -269,6 +316,7 @@ export default function AdminPanel({ players: initial }: { players: Player[] }) 
           ))}
         </div>
 
+        {tab === "singles" && <>
         {/* Filters */}
         <div
           className="rounded-2xl px-5 py-4 mb-4 flex flex-wrap gap-3 items-center"
@@ -412,6 +460,83 @@ export default function AdminPanel({ players: initial }: { players: Player[] }) 
         <p className="text-center text-xs mt-6" style={{ color: "rgba(28,35,64,0.28)" }}>
           {filtered.length} / {players.length} {lang === "mn" ? "тоглогч харагдаж байна" : "players shown"}
         </p>
+        </>}
+
+        {tab === "doubles" && (
+          <div
+            className="rounded-2xl overflow-hidden"
+            style={{
+              background: "rgba(255,255,255,0.72)",
+              backdropFilter: "blur(16px)",
+              border: "1px solid rgba(255,183,197,0.3)",
+              boxShadow: "0 2px 16px rgba(28,35,64,0.07)",
+            }}
+          >
+            {/* Header */}
+            <div
+              className="grid grid-cols-12 px-5 py-3 text-xs font-bold uppercase tracking-wider"
+              style={{ background: "rgba(200,144,58,0.07)", borderBottom: "1px solid rgba(200,144,58,0.18)", color: "rgba(28,35,64,0.45)" }}
+            >
+              <div className="col-span-1">#</div>
+              <div className="col-span-5">{t.team}</div>
+              <div className="col-span-3 hidden sm:block">{t.email}</div>
+              <div className="col-span-2">{t.status}</div>
+              <div className="col-span-1 text-right">{t.actions}</div>
+            </div>
+
+            {doubles.length === 0 ? (
+              <div className="px-5 py-10 text-center text-sm" style={{ color: "rgba(28,35,64,0.35)" }}>
+                {t.noTeams}
+              </div>
+            ) : (
+              doubles.map((team, i) => (
+                <div
+                  key={team.id}
+                  className="grid grid-cols-12 px-5 py-3.5 items-center text-sm"
+                  style={{
+                    borderBottom: i < doubles.length - 1 ? "1px solid rgba(28,35,64,0.06)" : "none",
+                    background: team.checked_in && team.paid ? "rgba(34,139,34,0.03)" : "transparent",
+                  }}
+                >
+                  <div className="col-span-1 text-xs font-bold" style={{ color: "rgba(28,35,64,0.3)" }}>{i + 1}</div>
+                  <div className="col-span-5">
+                    <div className="font-semibold text-sm" style={{ color: "#1C2340" }}>
+                      {team.player1_first_name} {team.player1_last_name}
+                    </div>
+                    <div className="text-xs" style={{ color: "rgba(28,35,64,0.45)" }}>
+                      & {team.player2_first_name} {team.player2_last_name}
+                    </div>
+                  </div>
+                  <div className="col-span-3 hidden sm:block text-xs truncate" style={{ color: "rgba(28,35,64,0.45)" }}>
+                    {team.email}
+                  </div>
+                  <div className="col-span-2 flex gap-1.5 flex-wrap">
+                    <Pill active={team.checked_in} label={team.checked_in ? t.checkedIn : t.notCheckedIn} />
+                    <Pill active={team.paid}        label={team.paid        ? t.paid      : t.notPaid}      />
+                  </div>
+                  <div className="col-span-1 flex gap-1.5 justify-end">
+                    <button
+                      onClick={() => handleDoublesCheckedIn(team)}
+                      title={team.checked_in ? t.markOut : t.markIn}
+                      className="w-8 h-8 rounded-xl flex items-center justify-center text-base transition-colors hover:scale-110"
+                      style={{ background: team.checked_in ? "rgba(34,139,34,0.12)" : "rgba(28,35,64,0.06)", border: `1px solid ${team.checked_in ? "rgba(34,139,34,0.25)" : "rgba(28,35,64,0.1)"}` }}
+                    >
+                      {team.checked_in ? "✓" : "○"}
+                    </button>
+                    <button
+                      onClick={() => handleDoublesPaid(team)}
+                      title={team.paid ? t.markUnpaid : t.markPaid}
+                      className="w-8 h-8 rounded-xl flex items-center justify-center text-base transition-colors hover:scale-110"
+                      style={{ background: team.paid ? "rgba(200,144,58,0.15)" : "rgba(28,35,64,0.06)", border: `1px solid ${team.paid ? "rgba(200,144,58,0.3)" : "rgba(28,35,64,0.1)"}` }}
+                    >
+                      {team.paid ? "💰" : "$"}
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   )

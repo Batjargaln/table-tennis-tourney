@@ -6,6 +6,7 @@ const categoryTitleKey = {
   "advanced-male":   "mensAdvanced",
   "beginner-female": "womensBeginner",
   "advanced-female": "womensAdvanced",
+  "mixed-doubles":   "mixedDoubles",
 } as const
 
 const categoryDescKey = {
@@ -13,12 +14,15 @@ const categoryDescKey = {
   "advanced-male":   "forAdvanced",
   "beginner-female": "forBeginners",
   "advanced-female": "forAdvanced",
+  "mixed-doubles":   "forDoubles",
 } as const
 
 const CategoryCard = ({ category, data, onClick }) => {
   const { t } = useLang()
   const title = t[categoryTitleKey[category.id]] ?? category.title
   const desc  = t[categoryDescKey[category.id]]  ?? category.description
+
+  if (!data) return null
 
   return (
     <button
@@ -36,8 +40,16 @@ const CategoryCard = ({ category, data, onClick }) => {
         style={{
           background: category.gender === "male"
             ? "rgba(28,55,160,0.07)"
-            : "rgba(185,40,90,0.07)",
-          borderBottom: `1px solid ${category.gender === "male" ? "rgba(28,55,160,0.15)" : "rgba(220,100,140,0.22)"}`,
+            : category.gender === "female"
+            ? "rgba(185,40,90,0.07)"
+            : "rgba(34,139,34,0.07)",
+          borderBottom: `1px solid ${
+            category.gender === "male"
+              ? "rgba(28,55,160,0.15)"
+              : category.gender === "female"
+              ? "rgba(220,100,140,0.22)"
+              : "rgba(34,139,34,0.20)"
+          }`,
         }}
       >
         <p className="font-black text-sm tracking-wide" style={{ color: "#1C2340" }}>

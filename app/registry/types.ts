@@ -19,3 +19,19 @@ export interface FormErrors {
   gender?: string
   skillGroups?: string
 }
+
+export interface DoublesFormData {
+  player1FirstName: string
+  player1LastName: string
+  player2FirstName: string
+  player2LastName: string
+  email: string
+}
+
+export interface DoublesFormErrors {
+  player1FirstName?: string
+  player1LastName?: string
+  player2FirstName?: string
+  player2LastName?: string
+  email?: string
+}

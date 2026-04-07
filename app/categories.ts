@@ -29,4 +29,11 @@ export const categories: ICategory[] = [
     gender: "female",
     skillLevel: "advanced",
   },
+  {
+    id: "mixed-doubles",
+    title: "Mixed Doubles",
+    description: "One man + one woman per team, $30 entry",
+    gender: "mixed",
+    skillLevel: "doubles",
+  },
 ]
