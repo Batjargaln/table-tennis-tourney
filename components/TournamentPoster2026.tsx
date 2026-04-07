@@ -208,23 +208,22 @@ export default function TournamentPoster2026() {
 
       {/* ── Main content ── */}
       <div
-        className="relative z-10 flex-1 max-w-2xl mx-auto w-full px-4 sm:px-6 pt-6"
-        style={{ paddingBottom: "max(5rem, 14vw)" }}
+        className="relative z-10 flex-1 max-w-3xl mx-auto w-full px-6 sm:px-12 pt-4 pb-16 flex flex-col"
       >
         {/* Language toggle */}
-        <div className="flex justify-end mb-4">
+        <div className="flex justify-end mb-3">
           <div
-            className="flex rounded-full overflow-hidden text-sm"
-            style={{ border: "1px solid rgba(28,35,64,0.18)" }}
+            className="flex rounded-full overflow-hidden text-xs"
+            style={{ border: "1px solid rgba(28,35,64,0.16)" }}
           >
             {(["mn", "en"] as Lang[]).map((l) => (
               <button
                 key={l}
                 onClick={() => setLang(l)}
-                className="px-4 py-1.5 font-bold transition-all"
+                className="px-3.5 py-1.5 font-bold transition-all"
                 style={{
-                  background: lang === l ? "rgba(28,35,64,0.1)" : "transparent",
-                  color: lang === l ? "#1C2340" : "rgba(28,35,64,0.38)",
+                  background: lang === l ? "rgba(28,35,64,0.09)" : "transparent",
+                  color: lang === l ? "#1C2340" : "rgba(28,35,64,0.35)",
                 }}
               >
                 {l === "mn" ? "МОН" : "ENG"}
@@ -234,311 +233,173 @@ export default function TournamentPoster2026() {
         </div>
 
         {/* Organizer / sponsor logos */}
-        <div className="flex items-center justify-center flex-wrap gap-2 mb-8">
-          <Image
-            src="/matta(1).png"
-            alt="MATTA"
-            width={160}
-            height={160}
-            className="object-contain w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36"
-          />
-          <Image
-            src="/dc-mongol-real.png"
-            alt="DC Mongol Club"
-            width={160}
-            height={160}
-            className="object-contain w-24 h-24 sm:w-32 sm:h-32 md:w-40 md:h-40"
-          />
-          <Image
-            src="/elchin(1).png"
-            alt="Elchin"
-            width={160}
-            height={160}
-            className="object-contain w-20 h-20 sm:w-28 sm:h-28 md:w-36 md:h-36"
-          />
+        <div className="flex items-center justify-center flex-wrap gap-3 mb-3">
+          <Image src="/matta(1).png"       alt="MATTA"         width={160} height={160} className="object-contain w-14 h-14 sm:w-20 sm:h-20" />
+          <Image src="/dc-mongol-real.png" alt="DC Mongol Club" width={160} height={160} className="object-contain w-18 h-18 sm:w-24 sm:h-24" />
+          <Image src="/elchin(1).png"      alt="Elchin"         width={160} height={160} className="object-contain w-14 h-14 sm:w-20 sm:h-20" />
         </div>
 
-        {/* Title block */}
-        <div className="text-center mb-9">
-          <p
-            className="text-xs font-bold tracking-[0.35em] uppercase mb-5"
-            style={{ color: "rgba(28,35,64,0.32)" }}
-          >
-            {t("ШИРЭЭНИЙ ТЕННИС", "TABLE TENNIS")}
-          </p>
+        {/* ── Hero: title left / year right ── */}
+        <div className="flex items-center gap-6 mb-3">
 
-          {/* Petal divider */}
-          <div className="flex items-center gap-3 mb-5">
-            <div
-              className="flex-1 h-px"
-              style={{ background: "linear-gradient(90deg, transparent, rgba(255,138,174,0.5))" }}
-            />
-            <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true">
-              <circle cx="10" cy="4"  r="2.8" fill="#FFB7C5" opacity="0.9" />
-              <circle cx="16" cy="10" r="2.8" fill="#FFB7C5" opacity="0.9" />
-              <circle cx="10" cy="16" r="2.8" fill="#FFB7C5" opacity="0.9" />
-              <circle cx="4"  cy="10" r="2.8" fill="#FFB7C5" opacity="0.9" />
-              <circle cx="10" cy="10" r="1.8" fill="#C8903A" />
-            </svg>
-            <div
-              className="flex-1 h-px"
-              style={{ background: "linear-gradient(90deg, rgba(255,138,174,0.5), transparent)" }}
-            />
+          {/* Left: all text info */}
+          <div className="flex-1 min-w-0">
+            <p className="text-xs font-black tracking-[0.4em] uppercase mb-2 text-center sm:text-left" style={{ color: "rgba(28,35,64,0.38)" }}>
+              {t("ШИРЭЭНИЙ ТЕННИС", "TABLE TENNIS")}
+            </p>
+            <div className="h-px mb-3" style={{ background: "linear-gradient(90deg, rgba(255,138,174,0.6), transparent)" }} />
+
+            <h1 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight mb-1" style={{ color: "#1C2340" }}>
+              {t("Вашингтон Д.С. орчмын Монголчуудын", "D.C. Area Mongolians")}
+            </h1>
+            <h2 className="text-base sm:text-xl font-bold mb-4" style={{ color: "#B8762A" }}>
+              {t("Ширээний Теннисний Тэмцээн", "Table Tennis Tournament")}
+            </h2>
+
+            <div className="flex flex-col gap-1">
+              <p className="text-sm sm:text-base font-bold" style={{ color: "#1C2340" }}>
+                <Calendar className="inline w-3.5 h-3.5 mr-1.5 mb-0.5" style={{ color: "#C8903A" }} />
+                {t("2026 оны 4 сарын 19 · 10:00 AM", "April 19, 2026 · 10:00 AM")}
+              </p>
+              <a
+                href="https://maps.google.com/?q=6403+Chillum+Pl+NW,+Washington,+DC+20012"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm font-semibold transition-opacity hover:opacity-70"
+                style={{ color: "#2A3560" }}
+              >
+                <MapPin className="inline w-3.5 h-3.5 mr-1 mb-0.5" style={{ color: "#2A3560", opacity: 0.55 }} />
+                {t("Вашингтон Ди Си, АНУ", "Washington, D.C., USA")}
+              </a>
+              <p className="text-xs" style={{ color: "rgba(28,35,64,0.35)" }}>
+                6403 Chillum Pl NW, Washington, DC 20012
+              </p>
+            </div>
           </div>
 
-          <h1
-            className="text-3xl sm:text-4xl md:text-5xl font-black leading-tight tracking-tight mb-1"
-            style={{ color: "#1C2340" }}
-          >
-            {t("Вашингтон Д.С. орчмын Монголчуудын", "D.C. Area Mongolians")}
-          </h1>
-          <h2
-            className="text-xl sm:text-2xl md:text-3xl font-bold mb-5"
-            style={{ color: "#B8762A" }}
-          >
-            {t("Ширээний Теннисний Тэмцээн", "Table Tennis Tournament")}
-          </h2>
-
-          {/* Year */}
-          <span
-            className="inline-block text-5xl sm:text-6xl md:text-7xl font-black leading-none mb-7"
+          {/* Right: year as display element */}
+          <div
+            className="shrink-0 text-7xl sm:text-8xl font-black leading-none tracking-tighter select-none text-right"
             style={{
-              background: "linear-gradient(135deg, #C8903A 0%, #E8B86A 45%, #A87028 100%)",
+              background: "linear-gradient(160deg, #D4A048 0%, #F0CC7A 40%, #A87028 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
-              filter: "drop-shadow(0 1px 6px rgba(180,120,40,0.28))",
+              filter: "drop-shadow(0 2px 10px rgba(180,120,40,0.22))",
             }}
           >
             2026
+          </div>
+        </div>
+
+        {/* ── Events rule ── */}
+        <div className="flex items-center gap-4 my-2">
+          <div className="flex-1 h-px" style={{ background: "rgba(200,144,58,0.3)" }} />
+          <span className="text-xs font-black tracking-[0.35em] uppercase" style={{ color: "rgba(200,144,58,0.7)" }}>
+            {t("Тэмцээний ангилал", "Events")}
           </span>
-
-          {/* Date & Location */}
-          <div className="flex flex-col sm:flex-row gap-2.5 justify-center mb-2">
-            <div
-              className="flex items-center justify-center gap-2 px-3 sm:px-5 py-2.5 rounded-full text-sm font-semibold"
-              style={{
-                background: "rgba(200,144,58,0.1)",
-                border: "1px solid rgba(200,144,58,0.35)",
-                color: "#8B5E20",
-              }}
-            >
-              <Calendar className="w-3.5 h-3.5 shrink-0" />
-              {t("4 сарын 19, 2026 · 10:00 AM", "April 19, 2026 · 10:00 AM")}
-            </div>
-            <a
-              href="https://maps.google.com/?q=6403+Chillum+Pl+NW,+Washington,+DC+20012"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-3 sm:px-5 py-2.5 rounded-full text-sm font-semibold transition-colors hover:bg-black/5"
-              style={{
-                background: "rgba(28,35,64,0.06)",
-                border: "1px solid rgba(28,35,64,0.14)",
-                color: "#2A3560",
-              }}
-            >
-              <MapPin className="w-3.5 h-3.5 shrink-0" />
-              {t("Вашингтон Ди Си, АНУ", "Washington, D.C., USA")}
-            </a>
-          </div>
-          <p className="text-xs" style={{ color: "rgba(28,35,64,0.35)" }}>
-            6403 Chillum Pl NW, Washington, DC 20012
-          </p>
+          <div className="flex-1 h-px" style={{ background: "rgba(200,144,58,0.3)" }} />
         </div>
 
-        {/* Category cards */}
-        <div className="grid sm:grid-cols-2 gap-4 mb-4">
-          {[
-            {
-              labelMn: "ЭРЭГТЭЙ", labelEn: "MEN",
-              accent: "rgba(28,55,160,0.06)",
-              headerBg: "rgba(28,55,160,0.07)",
-              border: "rgba(28,55,160,0.15)",
-              iconColor: "#2A5ABD",
-              icon: (
-                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="#2A5ABD">
-                  <path d="M9 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm9-9h3v3l-3.6 3.6A6.97 6.97 0 0 1 16 13a7 7 0 1 1-7-7 6.97 6.97 0 0 1 4.4 1.4L17 3z" />
-                </svg>
-              ),
-            },
-            {
-              labelMn: "ЭМЭГТЭЙ", labelEn: "WOMEN",
-              accent: "rgba(185,40,90,0.05)",
-              headerBg: "rgba(185,40,90,0.07)",
-              border: "rgba(220,100,140,0.22)",
-              iconColor: "#B8285A",
-              icon: (
-                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="#B8285A">
-                  <path d="M12 2a5 5 0 1 1 0 10A5 5 0 0 1 12 2zm0 12c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                </svg>
-              ),
-            },
-          ].map((cat) => (
-            <div
-              key={cat.labelEn}
-              className="rounded-2xl overflow-hidden"
-              style={{
-                background: "rgba(255,255,255,0.75)",
-                backdropFilter: "blur(16px)",
-                border: `1px solid ${cat.border}`,
-                boxShadow: "0 2px 16px rgba(28,35,64,0.07)",
-              }}
-            >
-              <div
-                className="px-5 py-3.5 flex items-center gap-2.5"
-                style={{ background: cat.headerBg, borderBottom: `1px solid ${cat.border}` }}
+        {/* ── Events — 3 columns ── */}
+        <div className="grid grid-cols-3 gap-0 mb-3" style={{ borderTop: "1px solid rgba(255,183,197,0.35)", borderBottom: "1px solid rgba(255,183,197,0.35)" }}>
+
+          {/* Men's Singles */}
+          <div className="text-center py-4 px-4" style={{ borderRight: "1px solid rgba(255,183,197,0.35)" }}>
+            <p className="text-sm font-black tracking-widest uppercase mb-1" style={{ color: "#2A5ABD" }}>
+              {t("Эрэгтэй", "Men's")}
+            </p>
+            <p className="text-base sm:text-lg font-bold mb-3" style={{ color: "#1C2340" }}>
+              {t("Ганцаарчилсан", "Singles")}
+            </p>
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+                style={{ background: "rgba(28,55,160,0.08)", color: "#2A5ABD", border: "1px solid rgba(28,55,160,0.15)" }}>
+                {t("Сонирхогч", "Intermediate")}
+              </span>
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+                style={{ background: "rgba(28,55,160,0.08)", color: "#2A5ABD", border: "1px solid rgba(28,55,160,0.15)" }}>
+                {t("Ахисан шат", "Advanced")}
+              </span>
+            </div>
+          </div>
+
+          {/* Women's Singles */}
+          <div className="text-center py-4 px-4" style={{ borderRight: "1px solid rgba(255,183,197,0.35)" }}>
+            <p className="text-sm font-black tracking-widest uppercase mb-1" style={{ color: "#B8285A" }}>
+              {t("Эмэгтэй", "Women's")}
+            </p>
+            <p className="text-base sm:text-lg font-bold mb-3" style={{ color: "#1C2340" }}>
+              {t("Ганцаарчилсан", "Singles")}
+            </p>
+            <div className="flex flex-col items-center gap-2">
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+                style={{ background: "rgba(185,40,90,0.07)", color: "#B8285A", border: "1px solid rgba(185,40,90,0.15)" }}>
+                {t("Сонирхогч", "Intermediate")}
+              </span>
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+                style={{ background: "rgba(185,40,90,0.07)", color: "#B8285A", border: "1px solid rgba(185,40,90,0.15)" }}>
+                {t("Ахисан шат", "Advanced")}
+              </span>
+            </div>
+          </div>
+
+          {/* Mixed Doubles */}
+          <div className="text-center py-4 px-4 flex flex-col justify-center items-center">
+            <p className="text-sm font-black tracking-widest uppercase mb-1" style={{ color: "#1a7a1a" }}>
+              {t("Холимог", "Mixed")}
+            </p>
+            <p className="text-base sm:text-lg font-bold mb-3" style={{ color: "#1C2340" }}>
+              {t("Хосын", "Doubles")}
+            </p>
+            <div className="flex flex-col items-center gap-2 w-full">
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+                style={{ background: "rgba(34,139,34,0.07)", color: "#1a7a1a", border: "1px solid rgba(34,139,34,0.18)" }}>
+                {t("Эрэгтэй", "Man")}
+              </span>
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+                style={{ background: "rgba(34,139,34,0.07)", color: "#1a7a1a", border: "1px solid rgba(34,139,34,0.18)" }}>
+                {t("Эмэгтэй", "Woman")}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Entry fee + CTA — side by side */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mt-4 mb-2">
+          <p className="text-sm font-semibold text-center sm:text-left" style={{ color: "rgba(28,35,64,0.5)" }}>
+            {t("Бүртгэлийн хураамж:", "Entry fee:")}{" "}
+            <span style={{ color: "#C8903A", fontWeight: 800 }}>$30</span>{" "}
+            <span style={{ color: "rgba(28,35,64,0.35)" }}>{t("/ ангилал", "/ event")}</span>
+            <br className="sm:hidden" />
+            <span className="sm:ml-2" style={{ color: "rgba(28,35,64,0.35)" }}>{t("Сонирхогч → Ахисан: +$20", "Intermediate → Advanced: +$20")}</span>
+          </p>
+
+          <div className="flex gap-2 shrink-0">
+            <Link href="/registry">
+              <Button
+                className="px-5 py-2.5 rounded-xl font-black text-sm tracking-wide transition-transform hover:scale-105 border-0"
+                style={{ background: "linear-gradient(135deg, #D4963C, #A87028)", color: "#FFF8F0", boxShadow: "0 4px 16px rgba(200,144,58,0.35)" }}
               >
-                {cat.icon}
-                <span className="font-black text-sm tracking-widest" style={{ color: "#1C2340" }}>
-                  {t(cat.labelMn, cat.labelEn)}
-                </span>
-              </div>
-              <div className="p-4 space-y-3">
-                {/* Advanced row */}
-                <div
-                  className="flex items-center justify-between px-4 py-3 rounded-xl"
-                  style={{ background: cat.accent, border: `1px solid ${cat.border}` }}
-                >
-                  <div>
-                    <p className="font-semibold text-sm" style={{ color: "#1C2340" }}>{t("Ахисан түвшин", "Advanced")}</p>
-                    <p className="text-xs" style={{ color: "rgba(28,35,64,0.4)" }}>{t("Advanced", "Ахисан түвшин")}</p>
-                  </div>
-                  <span className="font-black text-xl" style={{ color: "#C8903A" }}>$30</span>
-                </div>
-
-                {/* Beginner row */}
-                <div
-                  className="px-4 py-3 rounded-xl"
-                  style={{ background: cat.accent, border: `1px solid ${cat.border}` }}
-                >
-                  <div className="flex items-center justify-between mb-2.5">
-                    <div>
-                      <p className="font-semibold text-sm" style={{ color: "#1C2340" }}>{t("Сонирхогч", "Intermediate")}</p>
-                      <p className="text-xs" style={{ color: "rgba(28,35,64,0.4)" }}>{t("Intermediate", "Сонирхогч")}</p>
-                    </div>
-                    <span className="font-black text-xl" style={{ color: "#C8903A" }}>$30</span>
-                  </div>
-                  <div
-                    className="flex items-center gap-1.5 text-xs rounded-lg px-2.5 py-1.5"
-                    style={{
-                      background: "rgba(200,144,58,0.1)",
-                      border: "1px solid rgba(200,144,58,0.28)",
-                      color: "#8B5E20",
-                    }}
-                  >
-                    <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clipRule="evenodd" />
-                    </svg>
-                    {t("Ахисан руу шилжих: +$20", "Upgrade to Advanced: +$20")}
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Mixed Doubles card */}
-        <div
-          className="rounded-2xl overflow-hidden mb-4"
-          style={{
-            background: "rgba(255,255,255,0.75)",
-            backdropFilter: "blur(16px)",
-            border: "1px solid rgba(34,139,34,0.2)",
-            boxShadow: "0 2px 16px rgba(28,35,64,0.07)",
-          }}
-        >
-          <div
-            className="px-5 py-3.5 flex items-center gap-2.5"
-            style={{ background: "rgba(34,139,34,0.07)", borderBottom: "1px solid rgba(34,139,34,0.18)" }}
-          >
-            <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="#1a7a1a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <circle cx="9" cy="7" r="3" />
-              <circle cx="15" cy="7" r="3" />
-              <path d="M3 20v-1a6 6 0 0 1 6-6h6a6 6 0 0 1 6 6v1" />
-            </svg>
-            <span className="font-black text-sm tracking-widest" style={{ color: "#1C2340" }}>
-              {t("ХОЛИМОГ ХОС", "MIXED DOUBLES")}
-            </span>
-          </div>
-          <div className="px-5 py-4 flex items-center justify-between gap-4">
-            <div>
-              <p className="font-semibold text-sm mb-0.5" style={{ color: "#1C2340" }}>
-                {t("Нэг эрэгтэй + нэг эмэгтэй баг", "One man + one woman per team")}
-              </p>
-              <p className="text-xs" style={{ color: "rgba(28,35,64,0.4)" }}>
-                {t("Mixed Doubles", "Холимог хос")}
-              </p>
-            </div>
-            <span className="font-black text-xl shrink-0" style={{ color: "#C8903A" }}>$30</span>
+                {t("Бүртгүүлэх →", "Register →")}
+              </Button>
+            </Link>
+            <Link href="/participants">
+              <Button variant="ghost" className="px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-black/5"
+                style={{ color: "rgba(28,35,64,0.6)", border: "1px solid rgba(28,35,64,0.16)" }}>
+                {t("Оролцогчид", "Participants")}
+              </Button>
+            </Link>
+            <Link href="/rulebook">
+              <Button variant="ghost" className="px-4 py-2.5 rounded-xl font-bold text-sm hover:bg-black/5"
+                style={{ color: "rgba(28,35,64,0.6)", border: "1px solid rgba(28,35,64,0.16)" }}>
+                {t("Дүрэм", "Rules")}
+              </Button>
+            </Link>
           </div>
         </div>
 
-        {/* Fee summary */}
-        <div
-          className="rounded-2xl px-6 py-4 text-center mb-6"
-          style={{
-            background: "rgba(200,144,58,0.07)",
-            border: "1px solid rgba(200,144,58,0.25)",
-          }}
-        >
-          <p
-            className="text-xs uppercase tracking-[0.22em] font-semibold mb-1"
-            style={{ color: "rgba(28,35,64,0.38)" }}
-          >
-            {t("Бүртгэлийн хураамж", "Entry Fee")}
-          </p>
-          <p className="font-black text-2xl" style={{ color: "#C8903A" }}>
-            $30{" "}
-            <span className="text-sm font-semibold" style={{ color: "rgba(28,35,64,0.38)" }}>
-              {t("/ нэг ангилал", "/ per category")}
-            </span>
-          </p>
-          <p className="text-xs mt-1" style={{ color: "rgba(28,35,64,0.35)" }}>
-            {t("Сонирхогчоос ахисан руу шилжихэд +$20 · Холимог хос $30", "Intermediate → Advanced upgrade: +$20 · Mixed Doubles $30")}
-          </p>
-        </div>
-
-        {/* CTA buttons */}
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
-          <Link href="/registry" className="sm:w-auto w-full">
-            <Button
-              className="w-full sm:w-auto px-6 sm:px-9 py-3 rounded-xl font-black text-base tracking-wide transition-transform hover:scale-105 shadow-lg border-0"
-              style={{
-                background: "linear-gradient(135deg, #D4963C, #A87028)",
-                color: "#FFF8F0",
-                boxShadow: "0 4px 20px rgba(200,144,58,0.35)",
-              }}
-            >
-              {t("Бүртгүүлэх →", "Register Now →")}
-            </Button>
-          </Link>
-          <Link href="/participants" className="sm:w-auto w-full">
-            <Button
-              variant="ghost"
-              className="w-full sm:w-auto px-6 sm:px-9 py-3 rounded-xl font-bold text-base transition-colors hover:bg-black/5"
-              style={{
-                color: "rgba(28,35,64,0.65)",
-                border: "1px solid rgba(28,35,64,0.18)",
-              }}
-            >
-              {t("Оролцогчид", "Participants")}
-            </Button>
-          </Link>
-          <Link href="/rulebook" className="sm:w-auto w-full">
-            <Button
-              variant="ghost"
-              className="w-full sm:w-auto px-6 sm:px-9 py-3 rounded-xl font-bold text-base transition-colors hover:bg-black/5"
-              style={{
-                color: "rgba(28,35,64,0.65)",
-                border: "1px solid rgba(28,35,64,0.18)",
-              }}
-            >
-              {t("Дүрэм", "Rulebook")}
-            </Button>
-          </Link>
-        </div>
-
-        <p className="text-center text-xs mt-6" style={{ color: "rgba(28,35,64,0.28)" }}>
+        <p className="text-center text-xs mt-3" style={{ color: "rgba(28,35,64,0.28)" }}>
           {t("Зохион байгуулагч: DC Mongol Club", "Organized by DC Mongol Club")}
         </p>
       </div>
