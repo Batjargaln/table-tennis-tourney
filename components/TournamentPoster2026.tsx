@@ -239,24 +239,40 @@ export default function TournamentPoster2026() {
           <Image src="/elchin(1).png"      alt="Elchin"         width={160} height={160} className="object-contain w-14 h-14 sm:w-20 sm:h-20" />
         </div>
 
-        {/* ── Hero: title left / year right ── */}
-        <div className="flex items-center gap-6 mb-3">
+        {/* ── Hero ── */}
 
-          {/* Left: all text info */}
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-black tracking-[0.4em] uppercase mb-2 text-center sm:text-left" style={{ color: "rgba(28,35,64,0.38)" }}>
+        {/* Mobile: stacked center / Desktop: title-left + year-right */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-6 mb-3">
+
+          {/* Text block */}
+          <div className="flex-1 min-w-0 text-center sm:text-left">
+            <p className="text-xs font-black tracking-[0.4em] uppercase mb-1.5" style={{ color: "rgba(28,35,64,0.38)" }}>
               {t("ШИРЭЭНИЙ ТЕННИС", "TABLE TENNIS")}
             </p>
-            <div className="h-px mb-3" style={{ background: "linear-gradient(90deg, rgba(255,138,174,0.6), transparent)" }} />
+            <div className="h-px mb-2.5" style={{ background: "linear-gradient(90deg, rgba(255,138,174,0.5), transparent)" }} />
 
             <h1 className="text-2xl sm:text-3xl font-black leading-tight tracking-tight mb-1" style={{ color: "#1C2340" }}>
               {t("Вашингтон Д.С. орчмын Монголчуудын", "D.C. Area Mongolians")}
             </h1>
-            <h2 className="text-base sm:text-xl font-bold mb-4" style={{ color: "#B8762A" }}>
+            <h2 className="text-base sm:text-xl font-bold mb-3" style={{ color: "#B8762A" }}>
               {t("Ширээний Теннисний Тэмцээн", "Table Tennis Tournament")}
             </h2>
 
-            <div className="flex flex-col gap-1">
+            {/* Year — mobile only (inline under subtitle) */}
+            <div
+              className="text-5xl font-black leading-none tracking-tighter select-none mb-3 sm:hidden"
+              style={{
+                background: "linear-gradient(160deg, #D4A048 0%, #F0CC7A 40%, #A87028 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+                filter: "drop-shadow(0 2px 8px rgba(180,120,40,0.2))",
+              }}
+            >
+              2026
+            </div>
+
+            <div className="flex flex-col items-center sm:items-start gap-0.5">
               <p className="text-sm sm:text-base font-bold" style={{ color: "#1C2340" }}>
                 <Calendar className="inline w-3.5 h-3.5 mr-1.5 mb-0.5" style={{ color: "#C8903A" }} />
                 {t("2026 оны 4 сарын 19 · 10:00 AM", "April 19, 2026 · 10:00 AM")}
@@ -277,9 +293,9 @@ export default function TournamentPoster2026() {
             </div>
           </div>
 
-          {/* Right: year as display element */}
+          {/* Year — desktop only (right column) */}
           <div
-            className="shrink-0 text-7xl sm:text-8xl font-black leading-none tracking-tighter select-none text-right"
+            className="hidden sm:block shrink-0 text-7xl sm:text-8xl font-black leading-none tracking-tighter select-none text-right"
             style={{
               background: "linear-gradient(160deg, #D4A048 0%, #F0CC7A 40%, #A87028 100%)",
               WebkitBackgroundClip: "text",
@@ -301,23 +317,25 @@ export default function TournamentPoster2026() {
           <div className="flex-1 h-px" style={{ background: "rgba(200,144,58,0.3)" }} />
         </div>
 
-        {/* ── Events — 3 columns ── */}
-        <div className="grid grid-cols-3 gap-0 mb-3" style={{ borderTop: "1px solid rgba(255,183,197,0.35)", borderBottom: "1px solid rgba(255,183,197,0.35)" }}>
+        {/* ── Events — 1 col mobile / 3 col desktop ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-0 mb-3" style={{ borderTop: "1px solid rgba(255,183,197,0.35)", borderBottom: "1px solid rgba(255,183,197,0.35)" }}>
 
           {/* Men's Singles */}
-          <div className="text-center py-4 px-4" style={{ borderRight: "1px solid rgba(255,183,197,0.35)" }}>
+          {/* Men's Singles — border-b on mobile, border-r on desktop */}
+          <div className="text-center py-3 sm:py-4 px-4 border-b sm:border-b-0 sm:border-r"
+            style={{ borderColor: "rgba(255,183,197,0.35)" }}>
             <p className="text-sm font-black tracking-widest uppercase mb-1" style={{ color: "#2A5ABD" }}>
               {t("Эрэгтэй", "Men's")}
             </p>
-            <p className="text-base sm:text-lg font-bold mb-3" style={{ color: "#1C2340" }}>
+            <p className="text-base sm:text-lg font-bold mb-2.5" style={{ color: "#1C2340" }}>
               {t("Ганцаарчилсан", "Singles")}
             </p>
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+            <div className="flex sm:flex-col items-center justify-center gap-2">
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full sm:w-full text-center"
                 style={{ background: "rgba(28,55,160,0.08)", color: "#2A5ABD", border: "1px solid rgba(28,55,160,0.15)" }}>
                 {t("Сонирхогч", "Intermediate")}
               </span>
-              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full sm:w-full text-center"
                 style={{ background: "rgba(28,55,160,0.08)", color: "#2A5ABD", border: "1px solid rgba(28,55,160,0.15)" }}>
                 {t("Ахисан шат", "Advanced")}
               </span>
@@ -325,39 +343,40 @@ export default function TournamentPoster2026() {
           </div>
 
           {/* Women's Singles */}
-          <div className="text-center py-4 px-4" style={{ borderRight: "1px solid rgba(255,183,197,0.35)" }}>
+          <div className="text-center py-3 sm:py-4 px-4 border-b sm:border-b-0 sm:border-r"
+            style={{ borderColor: "rgba(255,183,197,0.35)" }}>
             <p className="text-sm font-black tracking-widest uppercase mb-1" style={{ color: "#B8285A" }}>
               {t("Эмэгтэй", "Women's")}
             </p>
-            <p className="text-base sm:text-lg font-bold mb-3" style={{ color: "#1C2340" }}>
+            <p className="text-base sm:text-lg font-bold mb-2.5" style={{ color: "#1C2340" }}>
               {t("Ганцаарчилсан", "Singles")}
             </p>
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+            <div className="flex sm:flex-col items-center justify-center gap-2">
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full sm:w-full text-center"
                 style={{ background: "rgba(185,40,90,0.07)", color: "#B8285A", border: "1px solid rgba(185,40,90,0.15)" }}>
                 {t("Сонирхогч", "Intermediate")}
               </span>
-              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full sm:w-full text-center"
                 style={{ background: "rgba(185,40,90,0.07)", color: "#B8285A", border: "1px solid rgba(185,40,90,0.15)" }}>
                 {t("Ахисан шат", "Advanced")}
               </span>
             </div>
           </div>
 
-          {/* Mixed Doubles */}
-          <div className="text-center py-4 px-4 flex flex-col justify-center items-center">
+          {/* Mixed Doubles — no border (last item) */}
+          <div className="text-center py-3 sm:py-4 px-4 flex flex-col justify-center items-center">
             <p className="text-sm font-black tracking-widest uppercase mb-1" style={{ color: "#1a7a1a" }}>
               {t("Холимог", "Mixed")}
             </p>
-            <p className="text-base sm:text-lg font-bold mb-3" style={{ color: "#1C2340" }}>
+            <p className="text-base sm:text-lg font-bold mb-2.5" style={{ color: "#1C2340" }}>
               {t("Хосын", "Doubles")}
             </p>
-            <div className="flex flex-col items-center gap-2 w-full">
-              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+            <div className="flex sm:flex-col items-center justify-center gap-2 sm:w-full">
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full sm:w-full text-center"
                 style={{ background: "rgba(34,139,34,0.07)", color: "#1a7a1a", border: "1px solid rgba(34,139,34,0.18)" }}>
                 {t("Эрэгтэй", "Man")}
               </span>
-              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full w-full text-center"
+              <span className="text-xs sm:text-sm font-semibold px-3 py-1 rounded-full sm:w-full text-center"
                 style={{ background: "rgba(34,139,34,0.07)", color: "#1a7a1a", border: "1px solid rgba(34,139,34,0.18)" }}>
                 {t("Эмэгтэй", "Woman")}
               </span>
