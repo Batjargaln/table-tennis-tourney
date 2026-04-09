@@ -21,11 +21,19 @@ export async function registerDoubles(data: {
   player2FirstName: string
   player2LastName: string
   email: string
-}) {
+}): Promise<{ error: string } | void> {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
+
+  const { data: existing } = await supabase
+    .from("doubles_teams")
+    .select("id")
+    .eq("email", data.email)
+    .maybeSingle()
+
+  if (existing) return { error: "duplicate_email" }
 
   const { error } = await supabase.from("doubles_teams").insert({
     player1_first_name: data.player1FirstName,
@@ -40,18 +48,26 @@ export async function registerDoubles(data: {
   redirect("/registry/done")
 }
 
-export async function registerPlayer(data: PlayerData) {
+export async function registerPlayer(data: PlayerData): Promise<{ error: string } | void> {
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )
 
+  const { data: existing } = await supabase
+    .from("players")
+    .select("id")
+    .eq("email", data.email)
+    .maybeSingle()
+
+  if (existing) return { error: "duplicate_email" }
+
   const { error } = await supabase.from("players").insert({
-    first_name: data.firstName,
-    last_name: data.lastName,
-    email: data.email,
-    age: data.age,
-    gender: data.gender,
+    first_name:     data.firstName,
+    last_name:      data.lastName,
+    email:          data.email,
+    age:            data.age,
+    gender:         data.gender,
     skill_beginner: data.skillGroups.beginner,
     skill_advanced: data.skillGroups.advanced,
   })

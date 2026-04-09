@@ -54,9 +54,13 @@ function SinglesForm() {
     return Object.keys(e).length === 0
   }
 
-  const handleSubmit = (evt: FormEvent) => {
+  const handleSubmit = async (evt: FormEvent) => {
     evt.preventDefault()
-    if (validate()) registerPlayer(formData)
+    if (!validate()) return
+    const result = await registerPlayer(formData)
+    if (result?.error === "duplicate_email") {
+      setErrors((e) => ({ ...e, email: "Энэ имэйлээр аль хэдийн бүртгүүлсэн байна!" }))
+    }
   }
 
   return (
@@ -233,9 +237,13 @@ function DoublesForm() {
     return Object.keys(e).length === 0
   }
 
-  const handleSubmit = (evt: FormEvent) => {
+  const handleSubmit = async (evt: FormEvent) => {
     evt.preventDefault()
-    if (validate()) registerDoubles(formData)
+    if (!validate()) return
+    const result = await registerDoubles(formData)
+    if (result?.error === "duplicate_email") {
+      setErrors((e) => ({ ...e, email: "Энэ имэйлээр аль хэдийн бүртгүүлсэн байна!" }))
+    }
   }
 
   const PlayerBlock = ({
