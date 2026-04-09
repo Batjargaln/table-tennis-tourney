@@ -114,18 +114,35 @@ function SinglesForm() {
         <Label className={labelCls} style={labelColor}>Оролцох түвшин</Label>
         <div className="rounded-xl overflow-hidden"
           style={{ border: `1px solid ${errors.skillGroups ? "rgba(220,60,60,0.4)" : "rgba(28,35,64,0.13)"}` }}>
+          {/* Intermediate */}
           <button type="button" onClick={() => handlePrimaryTier("beginner")}
-            className="w-full flex items-center justify-between px-4 py-3 text-left transition-colors"
+            className="w-full flex items-start justify-between px-4 py-3 text-left transition-colors"
             style={{ background: primaryTier === "beginner" ? "rgba(28,55,160,0.07)" : "rgba(255,255,255,0.55)", borderBottom: "1px solid rgba(28,35,64,0.08)" }}>
-            <div className="flex items-center gap-3">
-              <div className="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0"
+            <div className="flex items-start gap-3">
+              <div className="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5"
                 style={{ borderColor: primaryTier === "beginner" ? "#C8903A" : "rgba(28,35,64,0.25)" }}>
                 {primaryTier === "beginner" && <div className="w-2 h-2 rounded-full" style={{ background: "#C8903A" }} />}
               </div>
-              <span className="text-sm font-semibold" style={{ color: "#1C2340" }}>Сонирхогч</span>
-              <span className="text-xs" style={{ color: "rgba(28,35,64,0.38)" }}>Intermediate</span>
+              <div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="text-sm font-semibold" style={{ color: "#1C2340" }}>Сонирхогч</span>
+                  <span className="text-xs" style={{ color: "rgba(28,35,64,0.38)" }}>Intermediate</span>
+                </div>
+                <ul className="space-y-0.5">
+                  {[
+                    "Дүрэм мэддэг, сонирхлын үүднээс тоглодог",
+                    "Тэмцээнд анх удаа оролцож буй тоглогч",
+                    "Техникийн үндсийг эзэмшсэн боловч тэмцээний туршлага хязгаарлагдмал",
+                  ].map((line) => (
+                    <li key={line} className="flex items-start gap-1.5 text-xs" style={{ color: "rgba(28,35,64,0.55)" }}>
+                      <span className="mt-px shrink-0" style={{ color: "#C8903A" }}>·</span>
+                      {line}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <span className="font-black text-sm" style={{ color: "#C8903A" }}>$30</span>
+            <span className="font-black text-sm shrink-0 ml-3" style={{ color: "#C8903A" }}>$30</span>
           </button>
 
           {primaryTier === "beginner" && (
@@ -140,18 +157,34 @@ function SinglesForm() {
             </label>
           )}
 
+          {/* Advanced */}
           <button type="button" onClick={() => handlePrimaryTier("advanced")}
-            className="w-full flex items-center justify-between px-4 py-3 text-left transition-colors"
+            className="w-full flex items-start justify-between px-4 py-3 text-left transition-colors"
             style={{ background: primaryTier === "advanced" ? "rgba(200,144,58,0.08)" : "rgba(255,255,255,0.55)" }}>
-            <div className="flex items-center gap-3">
-              <div className="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0"
+            <div className="flex items-start gap-3">
+              <div className="w-4 h-4 rounded-full border-2 flex items-center justify-center shrink-0 mt-0.5"
                 style={{ borderColor: primaryTier === "advanced" ? "#C8903A" : "rgba(28,35,64,0.25)" }}>
                 {primaryTier === "advanced" && <div className="w-2 h-2 rounded-full" style={{ background: "#C8903A" }} />}
               </div>
-              <span className="text-sm font-semibold" style={{ color: "#1C2340" }}>Ахисан шат</span>
-              <span className="text-xs" style={{ color: "rgba(28,35,64,0.38)" }}>Advanced</span>
+              <div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="text-sm font-semibold" style={{ color: "#1C2340" }}>Ахисан шат</span>
+                  <span className="text-xs" style={{ color: "rgba(28,35,64,0.38)" }}>Advanced</span>
+                </div>
+                <ul className="space-y-0.5">
+                  {[
+                    "Тэмцээнд тогтмол оролцдог туршлагатай тоглогч",
+                    "Өмнөх жилийн Сонирхогчдын тэмцээний финалд хүрсэн тоглогч",
+                  ].map((line) => (
+                    <li key={line} className="flex items-start gap-1.5 text-xs" style={{ color: "rgba(28,35,64,0.55)" }}>
+                      <span className="mt-px shrink-0" style={{ color: "#C8903A" }}>·</span>
+                      {line}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-            <span className="font-black text-sm" style={{ color: "#C8903A" }}>$30</span>
+            <span className="font-black text-sm shrink-0 ml-3" style={{ color: "#C8903A" }}>$30</span>
           </button>
         </div>
         {errors.skillGroups && <p className={errorCls}>{errors.skillGroups}</p>}
