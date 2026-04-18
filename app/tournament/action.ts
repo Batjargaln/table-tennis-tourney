@@ -14,10 +14,12 @@ export async function fetchInitialTournamentData() {
   const [playersRes, doublesRes, statesRes] = await Promise.all([
     supabase()
       .from("players")
-      .select("id, first_name, last_name, email, age, gender, skill_beginner, skill_advanced"),
+      .select("id, first_name, last_name, email, age, gender, skill_beginner, skill_advanced")
+      .eq("paid", true),
     supabase()
       .from("doubles_teams")
-      .select("id, player1_first_name, player1_last_name, player2_first_name, player2_last_name, email"),
+      .select("id, player1_first_name, player1_last_name, player2_first_name, player2_last_name, email")
+      .eq("paid", true),
     supabase()
       .from("tournament_state")
       .select("category_id, groups, playoffs"),
