@@ -26,6 +26,7 @@ function SinglesForm() {
     gender: "", skillGroups: { beginner: false, advanced: false },
   })
   const [errors, setErrors] = useState<FormErrors>({})
+  const [serverError, setServerError] = useState<string | null>(null)
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -57,9 +58,14 @@ function SinglesForm() {
   const handleSubmit = async (evt: FormEvent) => {
     evt.preventDefault()
     if (!validate()) return
-    const result = await registerPlayer(formData)
-    if (result?.error === "duplicate_email") {
-      setErrors((e) => ({ ...e, email: "Энэ имэйлээр аль хэдийн бүртгүүлсэн байна!" }))
+    setServerError(null)
+    try {
+      const result = await registerPlayer(formData)
+      if (result?.error === "duplicate_email") {
+        setErrors((e) => ({ ...e, email: "Энэ имэйлээр аль хэдийн бүртгүүлсэн байна!" }))
+      }
+    } catch {
+      setServerError("Бүртгэл амжилтгүй боллоо. Дахин оролдоно уу.")
     }
   }
 
@@ -202,6 +208,10 @@ function SinglesForm() {
         )}
       </div>
 
+      {serverError && (
+        <p className={errorCls + " text-center"}>{serverError}</p>
+      )}
+
       <button type="submit"
         className="w-full py-3 rounded-xl font-black text-sm tracking-wide transition-transform hover:scale-[1.02] mt-2"
         style={{ background: "linear-gradient(135deg, #D4963C, #A87028)", color: "#FFF8F0", boxShadow: "0 4px 18px rgba(200,144,58,0.3)" }}>
@@ -213,46 +223,17 @@ function SinglesForm() {
 
 // ─── Doubles form ──────────────────────────────────────────────────────────────
 
-function DoublesForm() {
-  const [formData, setFormData] = useState<DoublesFormData>({
-    player1FirstName: "", player1LastName: "",
-    player2FirstName: "", player2LastName: "",
-    email: "",
-  })
-  const [errors, setErrors] = useState<DoublesFormErrors>({})
-
-  const set = (field: keyof DoublesFormData) =>
-    (e: ChangeEvent<HTMLInputElement>) =>
-      setFormData({ ...formData, [field]: e.target.value })
-
-  const validate = (): boolean => {
-    const e: DoublesFormErrors = {}
-    if (!formData.player1FirstName.trim()) e.player1FirstName = "Нэрээ оруулна уу!"
-    if (!formData.player1LastName.trim())  e.player1LastName  = "Овогоо оруулна уу!"
-    if (!formData.player2FirstName.trim()) e.player2FirstName = "Нэрээ оруулна уу!"
-    if (!formData.player2LastName.trim())  e.player2LastName  = "Овогоо оруулна уу!"
-    if (!formData.email.trim())            e.email            = "Имэйлээ оруулна уу!"
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) e.email = "Имэйл буруу байна!"
-    setErrors(e)
-    return Object.keys(e).length === 0
-  }
-
-  const handleSubmit = async (evt: FormEvent) => {
-    evt.preventDefault()
-    if (!validate()) return
-    const result = await registerDoubles(formData)
-    if (result?.error === "duplicate_email") {
-      setErrors((e) => ({ ...e, email: "Энэ имэйлээр аль хэдийн бүртгүүлсэн байна!" }))
-    }
-  }
-
-  const PlayerBlock = ({
-    label, firstField, lastField,
-  }: {
-    label: string
-    firstField: "player1FirstName" | "player2FirstName"
-    lastField:  "player1LastName"  | "player2LastName"
-  }) => (
+function PlayerBlock({
+  label, firstField, lastField, formData, errors, set,
+}: {
+  label: string
+  firstField: "player1FirstName" | "player2FirstName"
+  lastField:  "player1LastName"  | "player2LastName"
+  formData: DoublesFormData
+  errors: DoublesFormErrors
+  set: (field: keyof DoublesFormData) => (e: ChangeEvent<HTMLInputElement>) => void
+}) {
+  return (
     <div className="rounded-xl p-4 space-y-3"
       style={{ background: "rgba(28,35,64,0.03)", border: "1px solid rgba(28,35,64,0.08)" }}>
       <p className="text-xs font-black uppercase tracking-wider" style={{ color: "rgba(28,35,64,0.45)" }}>{label}</p>
@@ -272,6 +253,46 @@ function DoublesForm() {
       </div>
     </div>
   )
+}
+
+function DoublesForm() {
+  const [formData, setFormData] = useState<DoublesFormData>({
+    player1FirstName: "", player1LastName: "",
+    player2FirstName: "", player2LastName: "",
+    email: "",
+  })
+  const [errors, setErrors] = useState<DoublesFormErrors>({})
+  const [serverError, setServerError] = useState<string | null>(null)
+
+  const set = (field: keyof DoublesFormData) =>
+    (e: ChangeEvent<HTMLInputElement>) =>
+      setFormData((prev) => ({ ...prev, [field]: e.target.value }))
+
+  const validate = (): boolean => {
+    const e: DoublesFormErrors = {}
+    if (!formData.player1FirstName.trim()) e.player1FirstName = "Нэрээ оруулна уу!"
+    if (!formData.player1LastName.trim())  e.player1LastName  = "Овогоо оруулна уу!"
+    if (!formData.player2FirstName.trim()) e.player2FirstName = "Нэрээ оруулна уу!"
+    if (!formData.player2LastName.trim())  e.player2LastName  = "Овогоо оруулна уу!"
+    if (!formData.email.trim())            e.email            = "Имэйлээ оруулна уу!"
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) e.email = "Имэйл буруу байна!"
+    setErrors(e)
+    return Object.keys(e).length === 0
+  }
+
+  const handleSubmit = async (evt: FormEvent) => {
+    evt.preventDefault()
+    if (!validate()) return
+    setServerError(null)
+    try {
+      const result = await registerDoubles(formData)
+      if (result?.error === "duplicate_email") {
+        setErrors((e) => ({ ...e, email: "Энэ имэйлээр аль хэдийн бүртгүүлсэн байна!" }))
+      }
+    } catch {
+      setServerError("Бүртгэл амжилтгүй боллоо. Дахин оролдоно уу.")
+    }
+  }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -284,8 +305,8 @@ function DoublesForm() {
         {errors.email && <p className={errorCls}>{errors.email}</p>}
       </div>
 
-      <PlayerBlock label="1-р тоглогч (Эрэгтэй)" firstField="player1FirstName" lastField="player1LastName" />
-      <PlayerBlock label="2-р тоглогч (Эмэгтэй)" firstField="player2FirstName" lastField="player2LastName" />
+      <PlayerBlock label="1-р тоглогч (Эрэгтэй)" firstField="player1FirstName" lastField="player1LastName" formData={formData} errors={errors} set={set} />
+      <PlayerBlock label="2-р тоглогч (Эмэгтэй)" firstField="player2FirstName" lastField="player2LastName" formData={formData} errors={errors} set={set} />
 
       {/* Fee */}
       <div className="flex items-center justify-between px-4 py-3 rounded-xl"
@@ -293,6 +314,10 @@ function DoublesForm() {
         <span className="text-sm font-semibold" style={{ color: "rgba(28,35,64,0.65)" }}>Оролцооны хураамж</span>
         <span className="font-black text-base" style={{ color: "#C8903A" }}>$30</span>
       </div>
+
+      {serverError && (
+        <p className="text-red-500 text-sm text-center">{serverError}</p>
+      )}
 
       <button type="submit"
         className="w-full py-3 rounded-xl font-black text-sm tracking-wide transition-transform hover:scale-[1.02]"

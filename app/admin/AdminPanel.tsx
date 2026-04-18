@@ -117,7 +117,17 @@ function categoryLabel(p: Player, t: typeof T.en) {
   return parts.join(", ")
 }
 
-export default function AdminPanel({ players: initial, doublesTeams: initialDoubles }: { players: Player[]; doublesTeams: DoublesTeam[] }) {
+export default function AdminPanel({
+  players: initial,
+  doublesTeams: initialDoubles,
+  playersError,
+  doublesError,
+}: {
+  players: Player[]
+  doublesTeams: DoublesTeam[]
+  playersError?: string | null
+  doublesError?: string | null
+}) {
   const [lang, setLang]       = useState<Lang>("mn")
   const [tab, setTab]         = useState<"singles" | "doubles">("singles")
   const [search, setSearch]   = useState("")
@@ -251,6 +261,19 @@ export default function AdminPanel({ players: initial, doublesTeams: initialDoub
                 </button>
               ))}
             </div>
+            {/* Register link */}
+            <a
+              href="/registry"
+              className="px-4 py-1.5 rounded-xl text-sm font-bold transition-colors"
+              style={{
+                background: "rgba(200,144,58,0.12)",
+                color: "#A87028",
+                border: "1px solid rgba(200,144,58,0.35)",
+                textDecoration: "none",
+              }}
+            >
+              {lang === "mn" ? "Бүртгэх +" : "Register +"}
+            </a>
             {/* Go to Tournament */}
             <a
               href="/tournament"
@@ -316,6 +339,24 @@ export default function AdminPanel({ players: initial, doublesTeams: initialDoub
           ))}
         </div>
 
+        {/* DB error banners */}
+        {(playersError || doublesError) && (
+          <div className="mb-4 space-y-2">
+            {playersError && (
+              <div className="rounded-xl px-4 py-3 text-sm font-semibold"
+                style={{ background: "rgba(185,28,28,0.07)", border: "1px solid rgba(185,28,28,0.2)", color: "#B91C1C" }}>
+                Players table error: {playersError}
+              </div>
+            )}
+            {doublesError && (
+              <div className="rounded-xl px-4 py-3 text-sm font-semibold"
+                style={{ background: "rgba(185,28,28,0.07)", border: "1px solid rgba(185,28,28,0.2)", color: "#B91C1C" }}>
+                Doubles table error: {doublesError}
+              </div>
+            )}
+          </div>
+        )}
+
         {tab === "singles" && <>
         {/* Filters */}
         <div
@@ -338,16 +379,19 @@ export default function AdminPanel({ players: initial, doublesTeams: initialDoub
               color: "#1C2340",
             }}
           />
+          <div className="w-px self-stretch" style={{ background: "rgba(28,35,64,0.1)" }} />
           <div className="flex flex-wrap gap-1.5">
             <FilterBtn val="all"    current={gender}  set={setGender}  label={t.all}     />
             <FilterBtn val="male"   current={gender}  set={setGender}  label={t.male}    />
             <FilterBtn val="female" current={gender}  set={setGender}  label={t.female}  />
           </div>
+          <div className="w-px self-stretch" style={{ background: "rgba(28,35,64,0.1)" }} />
           <div className="flex flex-wrap gap-1.5">
             <FilterBtn val="all"      current={skill}  set={setSkill}  label={t.all}      />
             <FilterBtn val="beginner" current={skill}  set={setSkill}  label={t.beginner} />
             <FilterBtn val="advanced" current={skill}  set={setSkill}  label={t.advanced} />
           </div>
+          <div className="w-px self-stretch" style={{ background: "rgba(28,35,64,0.1)" }} />
           <div className="flex flex-wrap gap-1.5">
             <FilterBtn val="all"           current={statusF} set={setStatusF} label={t.all}         />
             <FilterBtn val="checked_in"    current={statusF} set={setStatusF} label={t.checkedIn}    />

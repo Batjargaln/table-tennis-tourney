@@ -18,15 +18,22 @@ async function fetchData() {
       .order("created_at", { ascending: true }),
   ])
 
-  if (playersRes.error) throw new Error(playersRes.error.message)
-
   return {
-    players:      playersRes.data ?? [],
-    doublesTeams: doublesRes.data ?? [],
+    players:      playersRes.data  ?? [],
+    doublesTeams: doublesRes.data  ?? [],
+    playersError: playersRes.error?.message  ?? null,
+    doublesError: doublesRes.error?.message  ?? null,
   }
 }
 
 export default async function AdminPage() {
-  const { players, doublesTeams } = await fetchData()
-  return <AdminPanel players={players} doublesTeams={doublesTeams} />
+  const { players, doublesTeams, playersError, doublesError } = await fetchData()
+  return (
+    <AdminPanel
+      players={players}
+      doublesTeams={doublesTeams}
+      playersError={playersError}
+      doublesError={doublesError}
+    />
+  )
 }

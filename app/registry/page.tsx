@@ -1,10 +1,14 @@
 import React from "react"
+import { cookies } from "next/headers"
 import PageShell, { GlassCard } from "@/components/PageShell"
 import RegistrationForm from "./RegistrationForm"
 
-export default function page() {
+export default async function page() {
+  const cookieStore = await cookies()
+  const isAdmin = cookieStore.get("admin_token")?.value === process.env.ADMIN_SECRET
+
   return (
-    <PageShell backLabel="Нүүр хуудас">
+    <PageShell backLabel="Нүүр хуудас" adminLink={isAdmin}>
       <GlassCard>
         <div
           className="px-6 py-4 rounded-t-2xl"

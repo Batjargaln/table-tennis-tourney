@@ -7,6 +7,7 @@ interface PageShellProps {
   children: ReactNode
   backLabel?: string
   backHref?: string
+  adminLink?: boolean
 }
 
 /** Shared light-theme wrapper used by all sub-pages */
@@ -14,6 +15,7 @@ export default function PageShell({
   children,
   backLabel = "Нүүр хуудас",
   backHref = "/",
+  adminLink = false,
 }: PageShellProps) {
   return (
     <div
@@ -49,6 +51,20 @@ export default function PageShell({
           </svg>
           {backLabel}
         </Link>
+
+        {adminLink && (
+          <Link
+            href="/admin"
+            className="ml-auto px-3 py-1.5 rounded-xl text-xs font-bold transition-colors"
+            style={{
+              background: "rgba(28,35,64,0.08)",
+              color: "#1C2340",
+              border: "1px solid rgba(28,35,64,0.15)",
+            }}
+          >
+            Админ самбар →
+          </Link>
+        )}
       </nav>
 
       {/* Page content */}
